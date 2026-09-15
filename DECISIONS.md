@@ -1,0 +1,21 @@
+# Design decisions
+
+- **Plan first.** The user required a feature plan before code. `docs/PLAN.md` was the first application artifact.
+- **Python standard library and plain JavaScript.** The workspace was empty. This stack runs today without package installation, external services or CDN access.
+- **SQLite transactions.** Related state and audit writes commit together. Failed validation does not partially replace a study.
+- **Pure rule engine.** Detection and risk scoring can be tested without HTTP or browser state.
+- **Decimal dose comparisons.** Inclusive fractional tolerances must not generate false findings from binary floating-point rounding.
+- **Explicit synthetic protocol.** No actual protocol was supplied. Example rules are visible and editable; none are presented as clinical facts.
+- **Study-specific severity.** ICH E6(R3) calls for sponsor-defined importance criteria. The requested three labels use a visible example policy and require human review.
+- **Separate unknowns.** Missing values are neither proof of compliance nor proof of a dosing or medication deviation. Missing visits are proposed events requiring source verification.
+- **Leading indicators dominate risk.** Visit readiness, queries, training and freshness contribute 75%. Observed burden contributes 25%. All weights are disclosed.
+- **Evidence-based finding IDs.** Changes to protocol version or observed evidence cannot silently reuse an old review.
+- **Reviews preserve measured burden.** Dismissal does not erase source facts. Source correction changes detection. The UI explains this limit.
+- **Stitch layout with functional controls.** Cards, sidebar, tables and colors follow the supplied export. Static mockup metrics were replaced by computed results.
+- **Participant dialog.** It retains the user's table context and provides keyboard focus management through the native dialog element.
+- **Local fonts and SVG icons.** They avoid runtime network dependencies. Small typography differences from Stitch are accepted and disclosed.
+- **Safe polling.** Monitoring views refresh every 30 seconds while idle. Active forms are preserved. This gives prompt visibility after local source changes without a separate streaming service.
+- **Draft CAPA recommendations.** Root cause remains an investigation, not an invented diagnosis. Closure requires evidence and a confirmed finding.
+- **JSON, CSV and browser print.** These formats work without extra packages. JSON carries complete source evidence and CAPA plans.
+- **Loopback-only runtime.** This is a tested reference implementation, not a claim of regulated production readiness. The README names remaining deployment controls.
+- **Reference slides.** The attached documentation slides were treated as supporting material. FLOW.md and this decision log help explain execution and reasoning; the user's explicit requirements control scope.
