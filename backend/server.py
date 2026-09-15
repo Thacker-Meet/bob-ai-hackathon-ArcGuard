@@ -31,7 +31,7 @@ def make_server(port=8000, mongo_uri=MONGO_URI, db_name=DB_NAME):
             self.send_header('Content-Length', str(len(raw)))
             self.send_header('X-Content-Type-Options', 'nosniff')
             self.send_header('Cache-Control', 'no-store')
-            self.send_header('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; object-src 'none'; frame-ancestors 'none'; base-uri 'self'")
+            self.send_header('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; img-src 'self' data:; object-src 'none'; frame-ancestors 'none'; base-uri 'self'")
             if filename: self.send_header('Content-Disposition', f'attachment; filename="{filename}"')
             for key, value in (headers or {}).items(): self.send_header(key, value)
             self.end_headers(); self.wfile.write(raw)
@@ -86,10 +86,10 @@ def make_server(port=8000, mongo_uri=MONGO_URI, db_name=DB_NAME):
                         writer.writerow({k: "'"+str(f[k]) if str(f[k]).lstrip().startswith(('=', '+', '-', '@', '\t', '\r')) else f[k] for k in fields})
                     return self.send(200, output.getvalue(), 'text/csv; charset=utf-8', 'arcguard-findings.csv')
                 if url.path.startswith('/api/'): return self.send(404, {'error': 'Unknown endpoint'})
-                files = {'/': 'index.html', '/index.html': 'index.html', '/app.js': 'app.js', '/styles.css': 'styles.css', '/assets/arcguard-logo.png': 'assets/arcguard-logo.png'}
+                files = {'/': 'index.html', '/index.html': 'index.html', '/app.js': 'app.js', '/styles.css': 'styles.css', '/assets/arcguard-logo.png': 'assets/arcguard-logo.png', '/assets/arcguard-logo.svg': 'assets/arcguard-logo.svg'}
                 if url.path not in files: return self.send(404, {'error': 'Not found'})
                 path = ROOT/'frontend'/files[url.path]
-                mime = {'html': 'text/html', 'js': 'text/javascript', 'css': 'text/css', 'png': 'image/png'}[path.suffix[1:]]
+                mime = {'html': 'text/html', 'js': 'text/javascript', 'css': 'text/css', 'png': 'image/png', 'svg': 'image/svg+xml'}[path.suffix[1:]]
                 return self.send(200, path.read_bytes(), mime+'; charset=utf-8')
             except (ValueError, TypeError, KeyError) as error: self.send(400, {'error': str(error)})
 
