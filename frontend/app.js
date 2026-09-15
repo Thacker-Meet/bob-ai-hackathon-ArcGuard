@@ -19,13 +19,14 @@ const icon = (name, opts = {}) => {
 
 // ── Icon mapping (nav + features) ───────────────────────────
 const navIcons = {
-  overview:   'dashboard',
-  sites:      'monitoring',
-  deviations: 'warning',
-  capa:       'checklist',
-  reports:    'description',
-  rules:      'verified_user',
-  settings:   'settings',
+  overview:     'dashboard',
+  sites:        'monitoring',
+  deviations:   'warning',
+  participants: 'group',
+  capa:         'checklist',
+  reports:      'description',
+  rules:        'verified_user',
+  settings:     'settings',
 };
 
 // ── Badge rendering ─────────────────────────────────────────
@@ -58,29 +59,32 @@ let data, source, asOf = '2026-09-15', page = 'overview';
 let filter = { q: '', severity: 'all', site: 'all' }, offset = 0;
 let lastLoad = null;
 let selectedSite = null;
+let selectedParticipant = null;
 let selectedCapa = null;
 let capaView = 'list'; // 'list' or 'kanban'
 
 // ── Navigation labels ─────────────────────────────────────
 const labels = {
-  overview:    'Overview',
-  sites:       'Site Risk',
-  deviations:  'Deviations',
-  capa:        'CAPA',
-  reports:     'Reports',
-  rules:       'Protocol Rules',
-  settings:    'Settings',
+  overview:     'Overview',
+  sites:        'Site Risk',
+  deviations:   'Deviations',
+  participants: 'Participant Review',
+  capa:         'CAPA',
+  reports:      'Reports',
+  rules:        'Protocol Rules',
+  settings:     'Settings',
 };
 
 // ── Page titles & descriptions ────────────────────────────
 const titles = {
-  overview:   ['Trial Risk Overview', 'Early visibility into site-level protocol risk and deviations.'],
-  sites:      ['Site Risk Monitor', 'Identify high-risk sites and understand the deviations driving their risk.'],
-  deviations: ['Protocol Deviations', 'Review flagged deviations across active protocols with full evidence.'],
-  capa:       ['CAPA Management', 'Manage corrective and preventive actions triggered by clinical trial protocol deviations.'],
-  reports:    ['Reports & Exports', 'Download official reports for regulatory inspections, quality review, or team sharing.'],
-  rules:      ['Protocol Rules', 'Active protocol parameters that define deviation detection criteria.'],
-  settings:   ['Settings & Configuration', 'System configuration, data management, and audit history.'],
+  overview:     ['Trial Risk Overview', 'Early visibility into site-level protocol risk and deviations.'],
+  sites:        ['Site Risk Monitor', 'Identify high-risk sites and understand the deviations driving their risk.'],
+  deviations:   ['Protocol Deviations', 'Review flagged deviations across active protocols with full evidence.'],
+  participants: ['Participant Review', 'Review participant-level protocol compliance across visits, dosing, assessments and medications.'],
+  capa:         ['CAPA Management', 'Manage corrective and preventive actions triggered by clinical trial protocol deviations.'],
+  reports:      ['Reports & Exports', 'Download official reports for regulatory inspections, quality review, or team sharing.'],
+  rules:        ['Protocol Rules', 'Active protocol parameters that define deviation detection criteria.'],
+  settings:     ['Settings & Configuration', 'System configuration, data management, and audit history.'],
 };
 
 // ── Toast notification ────────────────────────────────────
@@ -117,7 +121,7 @@ async function load() {
 // ── Navigation ─────────────────────────────────────────────
 function nav() {
   const openCapas = data.capas.filter(c => c.status !== 'closed').length;
-  const mainItems = ['overview', 'sites', 'deviations', 'capa', 'reports'];
+  const mainItems = ['overview', 'sites', 'deviations', 'participants', 'capa', 'reports'];
   const systemItems = ['rules', 'settings'];
 
   let html = `<div class="nav-section">Primary</div>`;
@@ -137,6 +141,9 @@ function navItem(id, openCapas) {
   let countHtml = '';
   if (id === 'deviations') {
     countHtml = `<span class="nav-count danger">${data.findings.length}</span>`;
+  } else if (id === 'participants') {
+    const flaggedPts = new Set(data.findings.map(f => f.participantId)).size;
+    if (flaggedPts > 0) countHtml = `<span class="nav-count danger">${flaggedPts}</span>`;
   } else if (id === 'capa' && openCapas > 0) {
     countHtml = `<span class="nav-count neutral">${openCapas}</span>`;
   } else if (id === 'sites') {
@@ -239,7 +246,7 @@ function findingRows(rows) {
   </td></tr>`;
   return rows.map(f => `
     <tr>
-      <td><span class="mono" style="font-weight:600;font-size:11px;color:var(--text)">${esc(f.participantId)}</span></td>
+      <td><button class="link mono" data-action="participant-link" data-id="${esc(f.participantId)}" style="font-weight:600;font-size:11px" title="Review participant dossier">${esc(f.participantId)}</button></td>
       <td><span class="mono" style="font-size:11px">${esc(f.siteId)}</span> <span class="muted">·</span> ${esc(siteName(f.siteId))}</td>
       <td>${esc(f.title)}</td>
       <td>${badge(f.severity)}</td>
@@ -491,9 +498,12 @@ function sites() {
             <span class="muted subtitle">Ranked by risk score</span>
           </div>
           <div style="display:flex;align-items:center;gap:8px">
-            <input type="text" id="site-quick-filter" placeholder="${icon('search')} Filter site or city..."
-              style="height:30px;font-size:11px;width:180px;padding-left:8px"
-              value="${esc(filter.q)}">
+            <div style="position:relative;display:flex;align-items:center">
+              <span class="material-symbols-outlined" style="position:absolute;left:8px;font-size:16px;color:var(--text-muted);pointer-events:none">search</span>
+              <input type="text" id="site-quick-filter" placeholder="Filter site or city..."
+                style="height:30px;font-size:11px;width:180px;padding-left:28px"
+                value="${esc(filter.q)}">
+            </div>
           </div>
         </div>
         <div class="table-wrap">
@@ -701,6 +711,353 @@ function deviations() {
         </table>
       </div>
     </details>`;
+}
+
+// ═════════════════════════════════════════════════════════════
+// PARTICIPANT REVIEW PAGE
+// ═════════════════════════════════════════════════════════════
+function participants() {
+  if (!source || !data) return '<div class="loading"><div class="spinner"></div>Loading...</div>';
+
+  const ptVisitsMap = new Map();
+  for (const v of source.visits) {
+    if (!ptVisitsMap.has(v.participantId)) ptVisitsMap.set(v.participantId, []);
+    ptVisitsMap.get(v.participantId).push(v);
+  }
+
+  const ptFindingsMap = new Map();
+  for (const f of data.findings) {
+    if (!ptFindingsMap.has(f.participantId)) ptFindingsMap.set(f.participantId, []);
+    ptFindingsMap.get(f.participantId).push(f);
+  }
+
+  // Rank participants with major findings first, then any findings, then by ID
+  const allParticipantIds = [...ptVisitsMap.keys()].sort((a, b) => {
+    const aFindings = ptFindingsMap.get(a) || [];
+    const bFindings = ptFindingsMap.get(b) || [];
+    const aMajor = aFindings.filter(f => f.severity === 'major').length;
+    const bMajor = bFindings.filter(f => f.severity === 'major').length;
+    if (aMajor !== bMajor) return bMajor - aMajor;
+    if (aFindings.length !== bFindings.length) return bFindings.length - aFindings.length;
+    return a.localeCompare(b);
+  });
+
+  if (!selectedParticipant || !ptVisitsMap.has(selectedParticipant)) {
+    selectedParticipant = allParticipantIds[0] || 'PT-0001';
+  }
+
+  const ptVisits = (ptVisitsMap.get(selectedParticipant) || []).sort((a, b) =>
+    (a.scheduledDate || '').localeCompare(b.scheduledDate || ''));
+  const ptFindings = ptFindingsMap.get(selectedParticipant) || [];
+  const primarySiteId = ptVisits[0]?.siteId || 'SITE-101';
+  const site = data.sites.find(s => s.id === primarySiteId) || { id: primarySiteId, name: siteName(primarySiteId) };
+
+  // Calculate compliance metrics
+  const totalVisits = ptVisits.length;
+  const completedVisits = ptVisits.filter(v => v.actualDate).length;
+  const visitAdherence = totalVisits ? Math.round((completedVisits / totalVisits) * 100) : 100;
+
+  const evaluatedDoses = ptVisits.filter(v => v.doseMg !== null && v.actualDate);
+  const correctDoses = evaluatedDoses.filter(v => v.doseMg === (data.protocol.doseMg || 50));
+  const doseAdherence = evaluatedDoses.length ? Math.round((correctDoses.length / evaluatedDoses.length) * 100) : 100;
+
+  const docVisits = ptVisits.filter(v => v.actualDate);
+  const documentedCount = docVisits.filter(v => v.documented === true).length;
+  const docAdherence = docVisits.length ? Math.round((documentedCount / docVisits.length) * 100) : 100;
+
+  const bannedMedCount = ptFindings.filter(f => f.rule === 'banned_medication').length;
+  const medAdherence = bannedMedCount > 0 ? 80 : 100;
+
+  const overallCompliance = Math.round((visitAdherence * 0.3) + (doseAdherence * 0.3) + (docAdherence * 0.2) + (medAdherence * 0.2));
+
+  const majorCount = ptFindings.filter(f => f.severity === 'major').length;
+  const minorCount = ptFindings.filter(f => f.severity === 'minor').length;
+  const riskBand = majorCount > 0 ? 'critical' : minorCount > 0 ? 'high' : 'low';
+
+  // Next scheduled visit
+  const nextVisit = ptVisits.find(v => !v.actualDate) || ptVisits[ptVisits.length - 1];
+
+  // Visit titles mapping
+  const visitNames = ['Screening', 'Baseline', 'Safety Check', 'Mid-Treatment', 'Closeout', 'Follow-up'];
+
+  return head(`
+    <a class="button" href="/api/export.csv?asOf=${asOf}">${icon('download')} Export Summary</a>
+    <a class="button primary" href="#deviations">${icon('fact_check')} Review Deviations</a>
+  `) + `
+    <!-- Participant Quick Switcher Bar -->
+    <div class="pt-switcher">
+      <div class="pt-switcher-left">
+        <span style="font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-muted)">Participant:</span>
+        <select id="participant-select" class="pt-select">
+          ${allParticipantIds.slice(0, 100).map(pid => {
+            const devCount = ptFindingsMap.get(pid)?.length || 0;
+            const hasMajor = ptFindingsMap.get(pid)?.some(f => f.severity === 'major');
+            const ptSite = ptVisitsMap.get(pid)?.[0]?.siteId || '';
+            const statusLabel = hasMajor ? '🚨 Major Deviation' : devCount > 0 ? '⚠️ Minor Deviation' : '✓ Normal';
+            return `<option value="${esc(pid)}" ${pid === selectedParticipant ? 'selected' : ''}>
+              ${esc(pid)} · ${esc(ptSite)} (${esc(siteName(ptSite))}) · ${statusLabel}
+            </option>`;
+          }).join('')}
+        </select>
+        <span style="font-size:12px;color:var(--text-secondary)">
+          Showing participant <strong style="color:var(--text)">${esc(selectedParticipant)}</strong> of ${allParticipantIds.length} randomized participants
+        </span>
+      </div>
+      <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">
+        Synthetic Demo Environment · 200 Sites
+      </div>
+    </div>
+
+    <!-- Participant Dossier Summary Card -->
+    <section class="card" style="margin-bottom:14px">
+      <div class="pt-dossier">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span class="pt-id-tag">${esc(selectedParticipant)}</span>
+            <span class="badge confirmed"><span class="risk-dot"></span>Active</span>
+            ${badge(riskBand, 'pill')}
+          </div>
+          <div style="font-size:12px;font-weight:500;color:var(--text);margin-bottom:2px">
+            ${esc(site.id)} · ${esc(site.name)}
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary)">
+            Next Scheduled Visit: <strong style="color:var(--text)">${nextVisit ? `${esc(nextVisit.id)} (${esc(nextVisit.scheduledDate)})` : 'None pending'}</strong>
+          </div>
+        </div>
+
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+            <span style="font-size:12px;font-weight:600;color:var(--text)">Overall Protocol Compliance</span>
+            <div>
+              <span class="mono" style="font-size:18px;font-weight:700;color:${overallCompliance < 90 ? 'var(--red-600)' : 'var(--teal-700)'}">
+                ${overallCompliance}%
+              </span>
+              <span style="font-size:11px;color:var(--text-muted)"> / 95% target</span>
+            </div>
+          </div>
+          <div class="bar-track" style="height:8px;background:var(--slate-200);border-radius:4px;overflow:hidden">
+            <div style="height:100%;width:${overallCompliance}%;background:${overallCompliance < 85 ? 'var(--red-600)' : overallCompliance < 95 ? 'var(--amber-500)' : 'var(--teal-600)'};border-radius:4px"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;font-size:11px;color:var(--text-secondary)">
+            <span style="color:${overallCompliance < 95 ? 'var(--red-600)' : 'var(--teal-700)'};font-weight:500">
+              ${overallCompliance < 95 ? `▼ ${(95 - overallCompliance)}% deficit vs protocol target` : '▲ Exceeds target adherence'}
+            </span>
+            <span>Target: ≥95.0% adherence</span>
+          </div>
+        </div>
+
+        <div class="pt-stat-boxes">
+          <div class="pt-stat-box${majorCount > 0 ? ' danger' : ''}">
+            <span style="font-size:10px;font-weight:700;text-transform:uppercase;color:${majorCount > 0 ? 'var(--red-700)' : 'var(--text-muted)'}">Major Deviations</span>
+            <span class="pt-stat-num">${majorCount}</span>
+            <span style="font-size:10px;font-weight:600;color:${majorCount > 0 ? 'var(--red-700)' : 'var(--text-secondary)'}">${majorCount > 0 ? 'Escalated' : 'None'}</span>
+          </div>
+          <div class="pt-stat-box${ptFindings.length > 0 ? ' warning' : ''}">
+            <span style="font-size:10px;font-weight:700;text-transform:uppercase;color:${ptFindings.length > 0 ? 'var(--amber-800)' : 'var(--text-muted)'}">Total Open</span>
+            <span class="pt-stat-num">${ptFindings.length}</span>
+            <span style="font-size:10px;font-weight:600;color:${ptFindings.length > 0 ? 'var(--amber-800)' : 'var(--text-secondary)'}">${majorCount} Major, ${minorCount} Minor</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Longitudinal Protocol Schedule & Deviations (Timeline) -->
+    <section class="card" style="margin-bottom:14px">
+      <div class="section-head">
+        <div style="display:flex;align-items:center;gap:8px">
+          ${icon('linear_scale', {size: 20})}
+          <h2>Longitudinal Protocol Schedule & Deviations</h2>
+        </div>
+        <span class="mono" style="font-size:11px;color:var(--text-muted)">Protocol Window: ±${data.protocol.visitWindowDays || 3} Days</span>
+      </div>
+      <div class="pt-timeline-scroll">
+        <div class="pt-timeline-grid">
+          ${ptVisits.slice(0, 6).map((v, idx) => {
+            const vFindings = ptFindings.filter(f => f.visitId === v.id);
+            const hasMajor = vFindings.some(f => f.severity === 'major');
+            const hasFinding = vFindings.length > 0;
+            const isCompleted = Boolean(v.actualDate);
+            const isUpcoming = !v.actualDate && idx === ptVisits.findIndex(x => !x.actualDate);
+            const isFuture = !v.actualDate && !isUpcoming;
+            const cardClass = hasMajor ? 'has-deviation' : isUpcoming ? 'upcoming' : isFuture ? 'future' : '';
+
+            let badgeHtml = '';
+            if (hasMajor) {
+              badgeHtml = `<span class="tl-badge deviation">${icon('priority_high', {size: 12})} MAJOR DEVIATION</span>`;
+            } else if (hasFinding) {
+              badgeHtml = `<span class="tl-badge deviation">${icon('warning', {size: 12})} ${esc(vFindings[0].severity.toUpperCase())}</span>`;
+            } else if (isCompleted) {
+              badgeHtml = `<span class="tl-badge completed">${icon('check', {size: 12})} Completed</span>`;
+            } else if (isUpcoming) {
+              badgeHtml = `<span class="tl-badge upcoming">${icon('schedule', {size: 12})} Upcoming</span>`;
+            } else {
+              badgeHtml = `<span class="tl-badge future">Future</span>`;
+            }
+
+            const dayOffset = (idx - 1) * 14;
+            const dayLabel = idx === 0 ? 'Day -14' : idx === 1 ? 'Day 0' : `Day ${dayOffset}`;
+            const visitTitle = visitNames[idx] || `Visit ${idx + 1}`;
+
+            return `
+              <div class="timeline-card ${cardClass}">
+                <div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                    <span class="mono" style="font-size:10px;font-weight:700;color:var(--text-muted)">${dayLabel}</span>
+                    ${badgeHtml}
+                  </div>
+                  <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:2px">${esc(visitTitle)}</div>
+                  <div class="mono" style="font-size:10px;color:var(--text-muted);margin-bottom:8px">${esc(v.id)}</div>
+                  ${hasFinding ? `
+                    <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:4px;padding:6px;margin:6px 0;font-size:11px">
+                      <strong style="color:var(--red-700);display:block">${esc(vFindings[0].title)}</strong>
+                      <span class="mono" style="font-size:10px;color:var(--text-secondary)">Obs: ${esc(vFindings[0].observed)}</span>
+                    </div>
+                  ` : `
+                    <div style="font-size:11px;color:var(--text-secondary);margin:4px 0">
+                      <div>Dose: <span class="mono">${v.doseMg ? `${v.doseMg} mg` : '—'}</span></div>
+                      <div>Meds: <span class="mono">${(v.medications && v.medications.length) ? v.medications.join(', ') : 'None'}</span></div>
+                    </div>
+                  `}
+                </div>
+                <div style="border-top:1px solid var(--border-light);padding-top:6px;margin-top:8px;font-size:10px;color:var(--text-muted);font-family:var(--font-mono);display:flex;justify-content:space-between">
+                  <span>${esc(v.scheduledDate || '—')}</span>
+                  <span>${v.actualDate ? '✓ Attended' : 'Scheduled'}</span>
+                </div>
+              </div>`;
+          }).join('')}
+        </div>
+      </div>
+    </section>
+
+    <!-- Domain Compliance Grid -->
+    <div class="domain-grid" style="margin-bottom:14px">
+      <section class="domain-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted)">Domain 01</span>
+          <span class="badge ${visitAdherence >= 95 ? 'confirmed' : 'needs-review'}">${visitAdherence >= 95 ? 'Compliant' : 'Deficit'}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:700">Visits</span>
+          <span class="mono" style="font-size:18px;font-weight:700;color:${visitAdherence >= 95 ? 'var(--teal-700)' : 'var(--red-600)'}">${visitAdherence}%</span>
+        </div>
+        <div class="bar-track" style="height:6px;background:var(--slate-100);border-radius:3px;overflow:hidden;margin-bottom:6px">
+          <div style="height:100%;width:${visitAdherence}%;background:${visitAdherence >= 95 ? 'var(--teal-600)' : 'var(--red-600)'}"></div>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">${completedVisits}/${totalVisits} visits completed on schedule</div>
+      </section>
+
+      <section class="domain-card${doseAdherence < 90 ? ' non-compliant' : ''}">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:${doseAdherence < 90 ? 'var(--red-700)' : 'var(--text-muted)'}">Domain 02</span>
+          <span class="badge ${doseAdherence >= 90 ? 'confirmed' : 'critical'}">${doseAdherence >= 90 ? 'Compliant' : 'Non-Compliant'}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:700">Dosing</span>
+          <span class="mono" style="font-size:18px;font-weight:700;color:${doseAdherence >= 90 ? 'var(--teal-700)' : 'var(--red-600)'}">${doseAdherence}%</span>
+        </div>
+        <div class="bar-track" style="height:6px;background:var(--slate-100);border-radius:3px;overflow:hidden;margin-bottom:6px">
+          <div style="height:100%;width:${doseAdherence}%;background:${doseAdherence >= 90 ? 'var(--teal-600)' : 'var(--red-600)'}"></div>
+        </div>
+        <div style="font-size:11px;color:${doseAdherence < 90 ? 'var(--red-700)' : 'var(--text-muted)'};font-weight:${doseAdherence < 90 ? '600' : '400'};font-family:var(--font-mono)">
+          ${doseAdherence < 90 ? 'Critical Deficit · Dosing variance detected' : 'Administered within ±0 mg'}
+        </div>
+      </section>
+
+      <section class="domain-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted)">Domain 03</span>
+          <span class="badge ${docAdherence >= 90 ? 'confirmed' : 'under-review'}">${docAdherence >= 90 ? 'Compliant' : 'Review Required'}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:700">Assessments</span>
+          <span class="mono" style="font-size:18px;font-weight:700;color:${docAdherence >= 90 ? 'var(--teal-700)' : 'var(--amber-700)'}">${docAdherence}%</span>
+        </div>
+        <div class="bar-track" style="height:6px;background:var(--slate-100);border-radius:3px;overflow:hidden;margin-bottom:6px">
+          <div style="height:100%;width:${docAdherence}%;background:${docAdherence >= 90 ? 'var(--teal-600)' : 'var(--amber-500)'}"></div>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">${documentedCount}/${docVisits.length} assessments documented</div>
+      </section>
+
+      <section class="domain-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted)">Domain 04</span>
+          <span class="badge ${medAdherence >= 90 ? 'confirmed' : 'under-review'}">${medAdherence >= 90 ? 'Compliant' : 'Flagged'}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <span style="font-size:14px;font-weight:700">Medications</span>
+          <span class="mono" style="font-size:18px;font-weight:700;color:${medAdherence >= 90 ? 'var(--teal-700)' : 'var(--amber-700)'}">${medAdherence}%</span>
+        </div>
+        <div class="bar-track" style="height:6px;background:var(--slate-100);border-radius:3px;overflow:hidden;margin-bottom:6px">
+          <div style="height:100%;width:${medAdherence}%;background:${medAdherence >= 90 ? 'var(--teal-600)' : 'var(--amber-500)'}"></div>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)">
+          ${bannedMedCount > 0 ? `${bannedMedCount} prohibited co-medications detected` : 'No prohibited co-medications'}
+        </div>
+      </section>
+    </div>
+
+    <!-- Auditable AI Risk Insight Card -->
+    <section class="card" style="margin-bottom:14px">
+      <div class="section-head">
+        <div style="display:flex;align-items:center;gap:8px">
+          ${icon('insights', {size: 20})}
+          <h2>Risk Insight</h2>
+        </div>
+        <span class="badge generic">Auditable Model Rationale</span>
+      </div>
+      <div class="grid-65-35" style="align-items:stretch">
+        <div style="background:var(--slate-50);border:1px solid var(--border-light);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;justify-content:space-between">
+          <div>
+            <div style="font-size:14px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:8px">
+              "${majorCount > 0
+                ? `Participant ${esc(selectedParticipant)} has critical protocol discrepancies at ${esc(site.id)} (${esc(site.name)}), including ${esc(ptFindings[0]?.title || 'dosing anomalies')}. Scheduled protocol visits remain tracked.`
+                : `Participant ${esc(selectedParticipant)} demonstrates good protocol adherence with standard monitoring parameters.`}"
+            </div>
+            <p style="font-size:12px;color:var(--text-secondary);line-height:1.6">
+              Identified deviations require site-level clinical reconciliation and investigator review under GCP protocol requirements.
+            </p>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);margin-top:10px">
+            Source records evaluated: ${ptVisits.length} visits · GCP Guideline Section 4.5
+          </div>
+        </div>
+
+        <div style="background:var(--surface);border:1px solid var(--border-light);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;justify-content:space-between">
+          <div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+              ${icon('verified', {size: 18})}
+              <strong style="font-size:13px;color:var(--text)">Recommended Operational Action</strong>
+            </div>
+            <p style="font-size:12px;color:var(--text-secondary);line-height:1.5">
+              ${ptFindings[0]?.recommendation || 'Maintain standard visit schedule and continue monitoring for prospective protocol deviations.'}
+            </p>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            ${ptFindings.length > 0 ? `
+              <button class="primary" data-action="finding" data-id="${esc(ptFindings[0].id)}" style="flex:1">
+                ${icon('fact_check')} Review Deviation (${esc(ptFindings[0].id)})
+              </button>
+            ` : `
+              <button class="primary" data-action="site" data-id="${esc(primarySiteId)}" style="flex:1">
+                ${icon('domain')} View Site Overview
+              </button>
+            `}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Participant Deviation Summary Table -->
+    <section class="card">
+      <div class="section-head">
+        <div>
+          <h2>Participant Deviations (${esc(selectedParticipant)})</h2>
+          <div class="section-desc">Protocol discrepancies logged in audit register for this study participant.</div>
+        </div>
+        <span class="mono" style="font-size:11px;color:var(--text-muted)">${ptFindings.length} Logged Records</span>
+      </div>
+      ${findingTable(ptFindings)}
+    </section>`;
 }
 
 // ═════════════════════════════════════════════════════════════
@@ -1069,7 +1426,7 @@ function render() {
   page = location.hash.slice(1) || 'overview';
   if (!labels[page]) page = 'overview';
   nav();
-  const pages = { overview, sites, deviations, capa: capas, reports, rules, settings };
+  const pages = { overview, sites, deviations, participants, capa: capas, reports, rules, settings };
   $('#main').innerHTML = pages[page]();
   if (page === 'settings') {
     api('/api/audit').then(events => {
@@ -1296,6 +1653,10 @@ document.addEventListener('click', async e => {
         e.preventDefault();
         filter = { q: '', severity: 'all', site: id }; offset = 0;
         location.hash = 'sites'; render(); break;
+      case 'participant-link':
+        e.preventDefault();
+        selectedParticipant = id;
+        location.hash = 'participants'; render(); break;
       case 'finding':       findingDialog(id); break;
       case 'capa-finding':  capaDialog(id); break;
       case 'edit-capa': {
@@ -1354,7 +1715,10 @@ document.addEventListener('input', e => {
   }
 });
 document.addEventListener('change', e => {
-  if (e.target.id === 'site-filter' || e.target.id === 'severity-filter') {
+  if (e.target.id === 'participant-select') {
+    selectedParticipant = e.target.value;
+    render();
+  } else if (e.target.id === 'site-filter' || e.target.id === 'severity-filter') {
     filter[e.target.id === 'site-filter' ? 'site' : 'severity'] = e.target.value;
     offset = 0; render();
   }
@@ -1471,6 +1835,19 @@ document.addEventListener('input', e => {
         <span class="sr-meta">${badge(s.band, 'pill')}</span>
       </div>`;
     });
+    // Search participants
+    const matchingPts = [...new Set(data.findings.map(f => f.participantId).concat(source?.visits ? source.visits.slice(0, 100).map(v => v.participantId) : []))].filter(pid => pid.toLowerCase().includes(q)).slice(0, 4);
+    matchingPts.forEach(pid => {
+      const devCount = data.findings.filter(f => f.participantId === pid).length;
+      html += `<div class="search-result" data-action="search-participant" data-id="${esc(pid)}">
+        ${icon('group')}
+        <div>
+          <div class="sr-label">${esc(pid)}</div>
+          <div style="font-size:11px;color:var(--text-muted)">Participant Dossier · ${devCount} Deviations</div>
+        </div>
+        <span class="sr-meta">${devCount > 0 ? badge('critical', 'pill') : badge('low', 'pill')}</span>
+      </div>`;
+    });
     // Search findings
     data.findings.filter(f => (f.participantId + f.title + f.id + f.siteId).toLowerCase().includes(q)).slice(0, 5).forEach(f => {
       html += `<div class="search-result" data-action="search-finding" data-id="${esc(f.id)}">
@@ -1497,6 +1874,10 @@ document.addEventListener('click', e => {
     location.hash = sr.dataset.target; render();
   } else if (sr.dataset.action === 'search-finding') {
     findingDialog(sr.dataset.id);
+  } else if (sr.dataset.action === 'search-participant') {
+    selectedParticipant = sr.dataset.id;
+    location.hash = 'participants';
+    render();
   }
 });
 
@@ -1522,7 +1903,7 @@ load().catch(e => {
 // ── Auto-refresh (read-only pages only) ───────────────────
 setInterval(() => {
   if (!data || document.hidden || $('#dialog').open ||
-      !['overview', 'sites', 'deviations', 'capa'].includes(page) ||
+      !['overview', 'sites', 'deviations', 'participants', 'capa'].includes(page) ||
       ['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
   load().catch(err => toast('Auto-refresh failed: ' + err.message, true));
 }, 30000);

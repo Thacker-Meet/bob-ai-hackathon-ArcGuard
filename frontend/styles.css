@@ -1346,6 +1346,91 @@ dialog .section-head { margin-bottom: 14px; }
 .diff-line.unchanged { color: var(--text-muted); }
 
 /* =====================================================================
+   PARTICIPANT REVIEW
+   ===================================================================== */
+.pt-switcher {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; background: var(--surface);
+  border: 1px solid var(--border-light); border-radius: var(--radius);
+  margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+}
+.pt-switcher-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.pt-select {
+  height: 32px; padding: 0 10px; font-size: 12px; font-weight: 600;
+  border-radius: var(--radius-sm); border: 1px solid var(--border-light);
+  background: var(--surface); color: var(--text);
+}
+.pt-dossier {
+  display: grid; grid-template-columns: 1.2fr 1.5fr 1fr;
+  gap: 20px; align-items: center;
+}
+@media (max-width: 900px) { .pt-dossier { grid-template-columns: 1fr; gap: 14px; } }
+.pt-id-tag {
+  font-family: var(--font-mono); font-size: 20px; font-weight: 700;
+  padding: 2px 10px; border-radius: var(--radius-sm);
+  background: var(--slate-100); border: 1px solid var(--slate-200);
+}
+.pt-stat-boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pt-stat-box {
+  padding: 10px 12px; border-radius: var(--radius-sm); text-align: center;
+  border: 1px solid var(--border-light); background: var(--slate-50);
+}
+.pt-stat-box.danger { background: var(--red-50); border-color: var(--red-200); }
+.pt-stat-box.warning { background: var(--amber-50); border-color: var(--amber-200); }
+.pt-stat-box .pt-stat-num {
+  font-family: var(--font-mono); font-size: 22px; font-weight: 700; display: block; margin: 2px 0;
+}
+.pt-stat-box.danger .pt-stat-num { color: var(--red-600); }
+.pt-stat-box.warning .pt-stat-num { color: var(--amber-700); }
+
+/* Longitudinal timeline */
+.pt-timeline-scroll { overflow-x: auto; padding-bottom: 8px; }
+.pt-timeline-grid {
+  display: grid; grid-template-columns: repeat(6, minmax(170px, 1fr));
+  gap: 12px; position: relative; min-width: 900px;
+}
+.timeline-card {
+  background: var(--surface); border: 1px solid var(--border-light);
+  border-radius: var(--radius); padding: 12px; display: flex;
+  flex-direction: column; justify-content: space-between; min-height: 170px;
+  position: relative; transition: border-color var(--transition);
+}
+.timeline-card:hover { border-color: var(--border-dark); }
+.timeline-card.has-deviation {
+  background: #fff8f8; border: 2px solid var(--red-500);
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15);
+}
+.timeline-card.upcoming {
+  border-style: dashed; border-color: var(--teal-500);
+}
+.timeline-card.future {
+  opacity: 0.6; border-style: dashed;
+}
+.tl-badge {
+  font-size: 10px; font-weight: 700; padding: 2px 6px;
+  border-radius: var(--radius-full); display: inline-flex; align-items: center; gap: 4px;
+}
+.tl-badge.completed { background: var(--emerald-50); color: var(--emerald-800); border: 1px solid var(--emerald-200); }
+.tl-badge.deviation { background: var(--red-100); color: var(--red-800); border: 1px solid var(--red-300); }
+.tl-badge.upcoming { background: var(--teal-50); color: var(--teal-800); border: 1px solid var(--teal-200); }
+.tl-badge.future { background: var(--slate-100); color: var(--slate-600); }
+
+/* Domain compliance grid */
+.domain-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+}
+@media (max-width: 900px) { .domain-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .domain-grid { grid-template-columns: 1fr; } }
+.domain-card {
+  background: var(--surface); border: 1px solid var(--border-light);
+  border-radius: var(--radius); padding: 14px;
+}
+.domain-card.non-compliant {
+  border-color: var(--red-300);
+  background: linear-gradient(135deg, var(--surface) 85%, #fee2e2 100%);
+}
+
+/* =====================================================================
    PRINT
    ===================================================================== */
 .print-only { display: none; }
