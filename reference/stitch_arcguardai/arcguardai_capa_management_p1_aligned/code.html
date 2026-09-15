@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html lang="en" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ArcGuardAI - CAPA Management</title>
+<!-- Google Fonts: Inter & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-container": "#5c647a",
+            "on-tertiary-fixed": "#001d31",
+            "on-tertiary-fixed-variant": "#004b73",
+            "on-surface-variant": "#3d4947",
+            "outline-variant": "#bcc9c6",
+            "outline": "#6d7a77",
+            "primary-container": "#008378",
+            "secondary-fixed-dim": "#bec6e0",
+            "surface-container-low": "#eff4ff",
+            "error": "#ba1a1a",
+            "primary": "#00685f",
+            "surface-dim": "#cbdbf5",
+            "on-error-container": "#93000a",
+            "surface-variant": "#d3e4fe",
+            "secondary-fixed": "#dae2fd",
+            "surface": "#f8f9ff",
+            "on-surface": "#0b1c30",
+            "secondary": "#565e74",
+            "tertiary-fixed-dim": "#93ccff",
+            "secondary-container": "#dae2fd",
+            "surface-container": "#e5eeff",
+            "on-secondary-fixed": "#131b2e",
+            "on-background": "#0b1c30",
+            "inverse-surface": "#213145",
+            "background": "#f8f9ff",
+            "on-primary-container": "#f4fffc",
+            "inverse-on-surface": "#eaf1ff",
+            "on-secondary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "surface-container-highest": "#d3e4fe",
+            "on-primary-fixed-variant": "#005049",
+            "inverse-primary": "#6bd8cb",
+            "primary-fixed": "#89f5e7",
+            "on-primary": "#ffffff",
+            "on-secondary-fixed-variant": "#3f465c",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#dce9ff",
+            "surface-tint": "#006a61",
+            "tertiary": "#006194",
+            "on-error": "#ffffff",
+            "on-primary-fixed": "#00201d",
+            "error-container": "#ffdad6",
+            "primary-fixed-dim": "#6bd8cb",
+            "tertiary-container": "#007bb9",
+            "surface-bright": "#f8f9ff",
+            "on-tertiary-container": "#fdfcff",
+            "tertiary-fixed": "#cce5ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "margin": "1.5rem",
+            "margin-compact": "1rem",
+            "space-lg": "1rem",
+            "space-2xl": "2rem",
+            "space-xs": "0.25rem",
+            "gutter-dense": "0.75rem",
+            "space-xl": "1.5rem",
+            "gutter": "1rem",
+            "space-md": "0.75rem"
+          },
+          "fontFamily": {
+            "headline-lg": ["Inter"],
+            "code-md": ["JetBrains Mono"],
+            "label-sm": ["Inter"],
+            "label-lg": ["Inter"],
+            "headline-md": ["Inter"],
+            "body-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "label-md": ["Inter"],
+            "title-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "display-lg": ["Inter"],
+            "headline-sm": ["Inter"]
+          },
+          "fontSize": {
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "code-md": ["12px", { "lineHeight": "16px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+            "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "label-md": ["11px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "title-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "600" }],
+            "body-lg": ["15px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "display-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Custom Scrollbar for dense enterprise UI */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F8FAFC;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased min-h-screen selection:bg-primary selection:text-white">
+<!-- ========================================================================= -->
+<!-- FIXED LEFT SIDEBAR NAVIGATION (w-60)                                     -->
+<!-- ========================================================================= -->
+<aside class="fixed top-0 left-0 h-screen w-60 bg-surface-container-lowest border-r border-outline-variant flex flex-col justify-between p-gutter-dense z-30">
+<!-- Brand / Product Header -->
+<div>
+<div class="flex items-center gap-2 px-2 py-2 mb-3">
+<img alt="ArcGuardAI Clinical Logo" class="h-8 w-auto object-contain rounded-sm" src="https://lh3.googleusercontent.com/aida/AEtjO1WyyNBiYzUMviitvkRKb_LDTNjD7nGZllOfP9Jd0eskaMLwUwY_3hB2cIbZlU6EYsa1KI795qVXQsvs_pjDR_Oq0e-Cea0upEmDaN7Hl0RX0nzDXxZRff0yeNSCl0c189nqulzU-evcrQJk81RgJuzQLS_vz-za0Wuy7JF0s_hk-B-H78VF_6HgatVrmRg8u3zKujD9ok3mtvuoGdpe_Dak4muBTE9epwH_G9FougFJZCrs3rk-_hQ6NK0"/>
+</div>
+<div class="px-3 py-1 mb-2">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-outline">Clinical Safety Workspace</span>
+</div>
+<!-- Navigation Tabs -->
+<nav class="space-y-1">
+<!-- 1. Overview -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-medium rounded-sm" href="#">
+<span class="material-symbols-outlined text-outline text-[18px]">dashboard</span>
+<span class="text-label-md font-label-md">Overview</span>
+</a>
+<!-- 2. Site Risk Monitor -->
+<a class="flex items-center justify-between px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-medium rounded-sm" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[18px]">clinical_notes</span>
+<span class="text-label-md font-label-md">Site Risk Monitor</span>
+</div>
+<span class="bg-red-50 text-red-700 border border-red-200 text-label-sm font-label-sm px-1.5 py-0.5 rounded">4 High</span>
+</a>
+<!-- 3. Protocol Deviations -->
+<a class="flex items-center justify-between px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-medium rounded-sm" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[18px]">warning</span>
+<span class="text-label-md font-label-md">Protocol Deviations</span>
+</div>
+<span class="bg-amber-50 text-amber-800 border border-amber-200 text-label-sm font-label-sm px-1.5 py-0.5 rounded">18 Major</span>
+</a>
+<!-- 4. Participant Review -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-medium rounded-sm" href="#">
+<span class="material-symbols-outlined text-outline text-[18px]">group</span>
+<span class="text-label-md font-label-md">Participant Review</span>
+</a>
+<!-- 5. CAPA Management (ACTIVE TAB) -->
+<a class="flex items-center justify-between px-3 py-2 bg-surface-container-low text-primary border-l-2 border-primary font-semibold rounded-sm" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings: 'FILL' 1;">assignment_turned_in</span>
+<span class="text-label-md font-label-md text-primary">CAPA Management</span>
+</div>
+<span class="bg-emerald-50 text-emerald-800 border border-emerald-300 text-label-sm font-label-sm px-1.5 py-0.5 rounded">12 Open</span>
+</a>
+<!-- 6. Reports -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-medium rounded-sm" href="#">
+<span class="material-symbols-outlined text-outline text-[18px]">analytics</span>
+<span class="text-label-md font-label-md">Reports</span>
+</a>
+<!-- 7. Protocol Rules -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-medium rounded-sm" href="#">
+<span class="material-symbols-outlined text-outline text-[18px]">policy</span>
+<span class="text-label-md font-label-md">Protocol Rules</span>
+</a>
+<!-- 8. Settings -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors font-medium rounded-sm" href="#">
+<span class="material-symbols-outlined text-outline text-[18px]">settings</span>
+<span class="text-label-md font-label-md">Settings</span>
+</a>
+</nav>
+</div>
+<!-- Bottom GxP Audit & Live Telemetry Compliance Footer -->
+<div class="border-t border-outline-variant pt-3 px-2 space-y-2"><div class="flex items-center justify-between"><span class="text-label-sm font-label-sm text-primary font-semibold bg-primary-fixed/20 px-1.5 py-0.5 rounded">Prototype Environment</span><span class="text-label-sm font-label-sm text-outline">Synthetic Data</span></div><div class="bg-surface-container-low p-2 rounded border border-outline-variant/60 space-y-1"><div class="flex items-center justify-between text-label-sm font-label-sm text-on-surface-variant"><span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Synthetic Demo Feed</span><span class="font-code-md text-code-md text-slate-500">200 Sites</span></div><div class="flex items-center gap-1 text-label-sm font-label-sm text-slate-600 font-medium"><span class="material-symbols-outlined text-[14px] text-primary">health_and_safety</span><span>Clinical Risk Prototype</span></div></div></div>
+</aside>
+<!-- ========================================================================= -->
+<!-- GLOBAL TOP UTILITY HEADER (h-14, left-60)                                 -->
+<!-- ========================================================================= -->
+<header class="fixed top-0 right-0 left-60 h-14 bg-surface-container-lowest border-b border-outline-variant flex items-center justify-between px-space-lg z-20">
+<!-- Left: Study Switcher & Global Search Bar -->
+<div class="flex items-center gap-4">
+<!-- Active Study Selector Dropdown -->
+<div class="flex items-center gap-2 border border-outline-variant px-2.5 py-1 rounded bg-white hover:bg-slate-50 cursor-pointer shadow-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">biotech</span>
+<span class="text-label-md font-label-md text-on-surface font-semibold tracking-tight">ARC-2026-01 | Phase III Global Cardiology | 200 Sites</span>
+<span class="material-symbols-outlined text-outline text-[16px]">expand_more</span>
+</div>
+<!-- Search Bar with ⌘K -->
+<div class="relative w-80">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-outline text-[18px]">search</span>
+<input class="w-full h-8 pl-8 pr-12 text-body-sm font-body-sm bg-surface border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Search CAPA ID, site, root cause..." type="text"/>
+<span class="absolute right-2 top-1.5 px-1.5 py-0.5 bg-slate-100 border border-slate-300 text-slate-500 text-label-sm font-code-md rounded">Ctrl+K</span>
+</div>
+</div>
+<!-- Right: Status, Primary Button & User Area -->
+<div class="flex items-center gap-3">
+<!-- Audit Trail Active Chip -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded text-label-sm font-label-sm font-medium"><span class="w-2 h-2 rounded-full bg-blue-500"></span><span>Prototype CAPA Workflow</span></div>
+<!-- Primary Action: + Create CAPA -->
+<button class="h-8 px-3 bg-primary text-on-primary text-label-md font-label-md rounded flex items-center gap-1.5 hover:bg-primary-container transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[16px]">add</span>
+<span class="">Create CAPA</span>
+</button>
+<div class="h-4 w-px bg-outline-variant mx-1"></div>
+<!-- Notifications & Help -->
+<div class="flex items-center gap-1 text-outline">
+<button class="relative p-1.5 hover:bg-surface-container-low rounded text-slate-600">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-1 right-1 w-4 h-4 bg-amber-500 text-white text-[9px] font-bold flex items-center justify-center rounded-full">3</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container-low rounded text-slate-600">
+<span class="material-symbols-outlined text-[20px]">help</span>
+</button>
+</div>
+<!-- User Profile Token -->
+<div class="flex items-center gap-2 pl-2 border-l border-outline-variant">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-label-md">
+          RR
+        </div>
+<div class="text-left hidden xl:block">
+<div class="text-label-sm font-label-sm font-semibold text-on-surface leading-tight">Dr. R. Reynolds</div>
+<div class="text-[10px] font-body-sm text-slate-500 leading-tight">Lead Clinical Monitor</div>
+</div>
+</div>
+</div>
+</header>
+<!-- ========================================================================= -->
+<!-- MAIN WORKSPACE CONTAINER (ml-60 pt-14)                                    -->
+<!-- ========================================================================= -->
+<main class="ml-60 pt-14 min-h-screen p-space-lg flex flex-col gap-space-lg">
+<!-- Page Header & Action Bar -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-space-lg rounded border border-outline-variant shadow-sm"><div><div class="flex items-center gap-2"><h1 class="text-headline-lg font-headline-lg text-on-surface">CAPA Management</h1><span class="bg-slate-100 text-slate-700 text-label-sm font-code-md px-2 py-0.5 rounded border border-slate-300">P1 Action Tracking</span></div><p class="text-body-sm font-body-sm text-on-surface-variant mt-0.5">Manage corrective and preventive actions triggered by clinical trial protocol deviations.</p></div><div class="flex items-center gap-2"><button class="h-8 px-3 border border-outline-variant text-on-surface text-label-md font-label-md rounded bg-white hover:bg-slate-50 flex items-center gap-1.5 shadow-sm"><span class="material-symbols-outlined text-outline text-[16px]">file_download</span><span>Export CAPA Log (CSV/PDF)</span></button><button class="h-8 px-3 bg-primary text-on-primary text-label-md font-label-md rounded flex items-center gap-1.5 hover:bg-primary-container transition-colors shadow-sm"><span class="material-symbols-outlined text-[16px]">add</span><span>Create CAPA</span></button></div></div>
+<!-- Top KPI Row: 5 Compact Clinical Metric Cards -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3"><div class="bg-white p-3.5 rounded border border-outline-variant shadow-sm flex flex-col justify-between"><div class="flex items-center justify-between text-outline text-label-sm font-label-sm"><span>Open CAPAs</span><span class="material-symbols-outlined text-[16px]">assignment_late</span></div><div class="flex items-baseline gap-2 mt-1"><span class="text-display-lg font-display-lg text-on-surface font-bold leading-none">12</span><span class="text-label-sm font-label-sm text-primary bg-primary-fixed/20 px-1.5 py-0.2 rounded font-medium">Active</span></div><div class="text-label-sm font-label-sm text-slate-500 mt-1">Triggered by trial deviations</div></div><div class="bg-white p-3.5 rounded border border-outline-variant shadow-sm flex flex-col justify-between"><div class="flex items-center justify-between text-outline text-label-sm font-label-sm"><span>High Priority</span><span class="material-symbols-outlined text-red-500 text-[16px]">error</span></div><div class="flex items-baseline gap-2 mt-1"><span class="text-display-lg font-display-lg text-red-600 font-bold leading-none">4</span><span class="text-label-sm font-label-sm text-red-700 bg-red-50 px-1.5 py-0.2 rounded border border-red-200 font-medium">High Action</span></div><div class="text-label-sm font-label-sm text-slate-500 mt-1">Immediate action focus</div></div><div class="bg-white p-3.5 rounded border border-outline-variant shadow-sm flex flex-col justify-between"><div class="flex items-center justify-between text-outline text-label-sm font-label-sm"><span>Due Soon</span><span class="material-symbols-outlined text-amber-600 text-[16px]">schedule</span></div><div class="flex items-baseline gap-2 mt-1"><span class="text-display-lg font-display-lg text-amber-600 font-bold leading-none">3</span><span class="text-label-sm font-label-sm text-amber-700 bg-amber-50 px-1.5 py-0.2 rounded border border-amber-200 font-medium">Upcoming</span></div><div class="text-label-sm font-label-sm text-slate-500 mt-1">Due within 7 days</div></div><div class="bg-white p-3.5 rounded border border-red-200 bg-red-50/20 shadow-sm flex flex-col justify-between relative overflow-hidden"><div class="flex items-center justify-between text-red-700 text-label-sm font-label-sm"><span>Overdue</span><span class="material-symbols-outlined text-red-600 text-[16px]">warning</span></div><div class="flex items-baseline gap-2 mt-1"><span class="text-display-lg font-display-lg text-red-700 font-bold leading-none">1</span><span class="text-label-sm font-label-sm text-red-800 bg-red-100 px-1.5 py-0.2 rounded border border-red-300 font-semibold">SITE-204</span></div><div class="text-label-sm font-label-sm text-red-600 font-medium mt-1">Escalated to site lead</div></div></section>
+<!-- Multi-faceted Filter Bar -->
+<div class="bg-white p-2.5 px-4 rounded border border-outline-variant shadow-sm flex flex-wrap items-center justify-between gap-3"><div class="flex items-center gap-3 flex-1 min-w-[280px]"><div class="relative flex-1 max-w-md"><span class="material-symbols-outlined absolute left-2.5 top-2 text-outline text-[18px]">search</span><input class="w-full h-8 pl-8 pr-3 text-body-sm font-body-sm bg-surface border border-outline-variant rounded focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Search CAPA ID, site, finding..." type="text"/></div><div class="flex items-center gap-1.5 bg-surface border border-outline-variant px-2.5 py-1 rounded text-body-sm font-body-sm text-on-surface"><span class="text-outline text-label-sm font-label-sm">Status:</span><select class="bg-transparent border-0 p-0 text-body-sm font-body-sm font-medium focus:ring-0 cursor-pointer"><option>All Statuses</option><option selected="">In Progress (6)</option><option>Pending Review (2)</option><option>Implemented (2)</option><option>Closed (2)</option></select></div><div class="flex items-center gap-1.5 bg-surface border border-outline-variant px-2.5 py-1 rounded text-body-sm font-body-sm text-on-surface"><span class="text-outline text-label-sm font-label-sm">Priority:</span><select class="bg-transparent border-0 p-0 text-body-sm font-body-sm font-medium focus:ring-0 cursor-pointer"><option selected="">All Priorities</option><option>High</option><option>Moderate</option><option>Low</option></select></div></div><div class="flex items-center gap-2"><span class="text-label-sm font-code-md text-slate-500">Showing 4 of 12 CAPAs</span><button class="h-7 px-2.5 border border-outline-variant text-slate-700 bg-white hover:bg-slate-50 text-label-sm font-label-sm rounded flex items-center gap-1 shadow-sm"><span class="material-symbols-outlined text-[14px]">filter_alt_off</span><span>Reset</span></button></div></div>
+<!-- ======================================================================= -->
+<!-- 2-COLUMN WORKSPACE: Operational Table (~63%) & Inspection Drawer (~37%) -->
+<!-- ======================================================================= -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT/CENTER COLUMN: Clinical Table (~65% / 7.5 cols in 12-grid -> lg:col-span-7 or 8) -->
+<div class="lg:col-span-7 xl:col-span-8 bg-white border border-outline-variant rounded shadow-sm overflow-hidden flex flex-col">
+<!-- Table Control Strip -->
+<div class="px-space-md py-2.5 border-b border-outline-variant flex items-center justify-between bg-surface-bright">
+<div class="flex items-center gap-2">
+<span class="text-title-md font-title-md text-on-surface">Active Trial Quality Actions</span>
+<span class="text-label-sm font-code-md bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded font-semibold">4 Records displayed</span>
+</div>
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-slate-500">
+<span class="">Sorted by: <strong class="text-on-surface font-semibold">Priority &amp; Due Date</strong></span>
+<button class="p-1 hover:bg-slate-100 rounded text-outline">
+<span class="material-symbols-outlined text-[16px]">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse"><thead><tr class="h-9 bg-slate-50 border-b border-outline-variant text-label-md font-label-md uppercase tracking-wider text-slate-600"><th class="px-3 py-1.5 whitespace-nowrap">CAPA ID</th><th class="px-3 py-1.5 whitespace-nowrap">Site</th><th class="px-3 py-1.5 whitespace-nowrap">Finding</th><th class="px-3 py-1.5 whitespace-nowrap">Priority</th><th class="px-3 py-1.5 whitespace-nowrap">Due Date</th><th class="px-3 py-1.5 whitespace-nowrap">Status</th><th class="px-3 py-1.5 text-right whitespace-nowrap">View</th></tr></thead><tbody class="divide-y divide-outline-variant/60 text-body-sm font-body-sm"><tr class="h-12 bg-teal-50/40 border-l-4 border-l-primary hover:bg-teal-50/60 transition-colors"><td class="px-3 py-2 font-code-md text-primary font-bold whitespace-nowrap">CAPA-001</td><td class="px-3 py-2 whitespace-nowrap"><span class="font-semibold text-slate-900">SITE-101</span><span class="text-xs text-slate-500 block">Boston</span></td><td class="px-3 py-2 font-medium text-slate-900 max-w-[280px] truncate" title="DEV-001: Wrong-dose deviation at Visit 3">DEV-001: Wrong-dose deviation at Visit 3</td><td class="px-3 py-2 whitespace-nowrap"><span class="inline-flex items-center gap-1 bg-red-50 text-red-700 border border-red-200 text-label-sm font-label-sm px-1.5 py-0.5 rounded font-bold"><span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>High</span></td><td class="px-3 py-2 font-code-md text-slate-700 whitespace-nowrap">18 Sep 2026</td><td class="px-3 py-2 whitespace-nowrap"><span class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-200 text-label-sm font-label-sm px-1.5 py-0.5 rounded font-medium">In Progress</span></td><td class="px-3 py-2 text-right whitespace-nowrap"><button class="px-2.5 py-1 bg-primary text-on-primary text-label-sm font-label-sm rounded font-medium shadow-sm hover:bg-primary-container transition-colors">View Action</button></td></tr><tr class="h-12 hover:bg-slate-50 transition-colors"><td class="px-3 py-2 font-code-md text-slate-800 font-semibold whitespace-nowrap">CAPA-002</td><td class="px-3 py-2 whitespace-nowrap"><span class="font-semibold text-slate-900">SITE-101</span><span class="text-xs text-slate-500 block">Boston</span></td><td class="px-3 py-2 font-medium text-slate-800 max-w-[280px] truncate" title="Repeated missed assessment windows">Repeated missed assessment windows</td><td class="px-3 py-2 whitespace-nowrap"><span class="inline-flex items-center gap-1 bg-red-50 text-red-700 border border-red-200 text-label-sm font-label-sm px-1.5 py-0.5 rounded font-bold"><span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>High</span></td><td class="px-3 py-2 font-code-md text-slate-700 whitespace-nowrap">20 Sep 2026</td><td class="px-3 py-2 whitespace-nowrap"><span class="inline-flex items-center gap-1 bg-purple-50 text-purple-700 border border-purple-200 text-label-sm font-label-sm px-1.5 py-0.5 rounded font-medium">Pending Review</span></td><td class="px-3 py-2 text-right whitespace-nowrap"><button class="px-2.5 py-1 border border-outline-variant text-slate-700 hover:bg-slate-100 text-label-sm font-label-sm rounded font-medium">View Action</button></td></tr><tr class="h-12 hover:bg-slate-50 transition-colors"><td class="px-3 py-2 font-code-md text-slate-800 font-semibold whitespace-nowrap">CAPA-003</td><td class="px-3 py-2 whitespace-nowrap"><span class="font-semibold text-slate-900">SITE-204</span><span class="text-xs text-slate-500 block">Chicago</span></td><td class="px-3 py-2 font-medium text-slate-800 max-w-[280px] truncate" title="Prohibited co-medication finding">Prohibited co-medication finding</td><td class="px-3 py-2 whitespace-nowrap"><span class="inline-flex items-center gap-1 bg-amber-50 text-amber-800 border border-amber-200 text-label-sm font-label-sm px-1.5 py-0.5 rounded font-bold"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Moderate</span></td><td class="px-3 py-2 font-code-md text-slate-700 whitespace-nowrap">24 Sep 2026</td><td class="px-3 py-2 whitespace-nowrap"><span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-300 text-label-sm font-label-sm px-1.5 py-0.5 rounded font-medium">Implemented</span></td><td class="px-3 py-2 text-right whitespace-nowrap"><button class="px-2.5 py-1 border border-outline-variant text-slate-700 hover:bg-slate-100 text-label-sm font-label-sm rounded font-medium">View Action</button></td></tr><tr class="h-12 hover:bg-slate-50 transition-colors"><td class="px-3 py-2 font-code-md text-slate-800 font-semibold whitespace-nowrap">CAPA-004</td><td class="px-3 py-2 whitespace-nowrap"><span class="font-semibold text-slate-900">SITE-309</span><span class="text-xs text-slate-500 block">Atlanta</span></td><td class="px-3 py-2 font-medium text-slate-800 max-w-[280px] truncate" title="Documentation / protocol version mismatch">Documentation / protocol version mismatch</td><td class="px-3 py-2 whitespace-nowrap"><span class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 border border-slate-300 text-label-sm font-label-sm px-1.5 py-0.5 rounded"><span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>Low</span></td><td class="px-3 py-2 font-code-md text-slate-700 whitespace-nowrap">30 Sep 2026</td><td class="px-3 py-2 whitespace-nowrap"><span class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 border border-slate-300 text-label-sm font-label-sm px-1.5 py-0.5 rounded font-medium">Closed</span></td><td class="px-3 py-2 text-right whitespace-nowrap"><button class="px-2.5 py-1 border border-outline-variant text-slate-700 hover:bg-slate-100 text-label-sm font-label-sm rounded font-medium">View Action</button></td></tr></tbody></table>
+</div>
+<!-- Table Pagination / Footer Summary -->
+<div class="p-2.5 bg-white border-t border-outline-variant flex items-center justify-between text-label-sm font-label-sm text-slate-600">
+<div class="">Showing 1-4 of 12 records</div>
+<div class="flex items-center gap-1">
+<button class="px-2 py-1 border border-outline-variant rounded bg-slate-50 text-slate-400 cursor-not-allowed">Previous</button>
+<button class="px-2.5 py-1 border border-primary bg-primary text-white rounded font-medium">1</button>
+<button class="px-2.5 py-1 border border-outline-variant rounded bg-white hover:bg-slate-50">2</button>
+<button class="px-2 py-1 border border-outline-variant rounded bg-white hover:bg-slate-50">Next</button>
+</div>
+</div>
+</div>
+<!-- ===================================================================== -->
+<!-- RIGHT COLUMN: Detailed Inspection Panel (Drawer style, ~35%)          -->
+<!-- ===================================================================== -->
+<div class="lg:col-span-5 xl:col-span-4 bg-white border border-outline-variant rounded shadow-sm flex flex-col"><div class="p-4 border-b border-outline-variant bg-surface-bright space-y-2"><div class="flex items-center justify-between flex-wrap gap-2"><div class="flex items-center gap-2"><h2 class="font-code-md text-headline-sm font-headline-sm text-primary font-bold">CAPA-001</h2><div class="flex items-center gap-1.5"><span class="bg-red-50 text-red-700 border border-red-200 text-label-sm font-label-sm px-2 py-0.5 rounded font-bold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>High Priority</span><span class="bg-blue-50 text-blue-700 border border-blue-200 text-label-sm font-label-sm px-2 py-0.5 rounded font-semibold">In Progress</span></div></div><button class="p-1 text-slate-400 hover:text-slate-700 rounded hover:bg-slate-100"><span class="material-symbols-outlined text-[20px]">close</span></button></div><div class="text-body-sm text-slate-600 flex flex-wrap items-center gap-x-2 gap-y-1"><span class="font-semibold text-slate-900">SITE-101 · Boston</span><span class="text-slate-300">·</span><span>Linked Deviation: <span class="font-code-md text-primary font-semibold">DEV-001</span></span><span class="text-slate-300">·</span><span>Due: <span class="font-medium text-slate-800">18 Sep 2026</span></span></div></div><div class="p-4 space-y-3.5 max-h-[calc(100vh-320px)] overflow-y-auto"><div class="space-y-1"><div class="flex items-center gap-1 text-label-sm font-label-sm uppercase tracking-wider text-slate-600 font-bold"><span class="material-symbols-outlined text-[15px] text-amber-600">report_problem</span><span>Finding</span></div><div class="text-body-sm font-body-sm text-on-surface bg-slate-50 p-2.5 rounded border border-slate-200 leading-relaxed">DEV-001: Participant PT-002 received 75 mg while the protocol allowed 45–55 mg.</div></div><div class="space-y-1"><div class="flex items-center gap-1 text-label-sm font-label-sm uppercase tracking-wider text-slate-600 font-bold"><span class="material-symbols-outlined text-[15px] text-blue-600">help</span><span>Likely Root Cause</span></div><div class="text-body-sm font-body-sm text-on-surface bg-slate-50 p-2.5 rounded border border-slate-200 leading-relaxed">Potential gap in pre-dose verification. Site review required to confirm.</div></div><div class="space-y-1"><div class="flex items-center gap-1 text-label-sm font-label-sm uppercase tracking-wider text-slate-600 font-bold"><span class="material-symbols-outlined text-[15px] text-emerald-600">build</span><span>Corrective Action</span></div><div class="text-body-sm font-body-sm text-on-surface bg-slate-50 p-2.5 rounded border border-slate-200 leading-relaxed">Review the dosing event and complete any protocol-required safety follow-up.</div></div><div class="space-y-1"><div class="flex items-center gap-1 text-label-sm font-label-sm uppercase tracking-wider text-slate-600 font-bold"><span class="material-symbols-outlined text-[15px] text-teal-600">security</span><span>Preventive Action</span></div><div class="text-body-sm font-body-sm text-on-surface bg-slate-50 p-2.5 rounded border border-slate-200 leading-relaxed">Retrain site staff and introduce a pre-dose verification checkpoint.</div></div><div class="bg-gradient-to-br from-teal-50/70 to-blue-50/50 border border-teal-200 rounded p-3 space-y-1.5"><div class="flex items-center gap-1.5 text-primary font-semibold text-label-md font-label-md"><span class="material-symbols-outlined text-primary text-[18px]">lightbulb</span><span>Recommended Mitigation</span></div><p class="text-body-sm font-body-sm text-slate-800 leading-relaxed">Implement electronic verification signoff before cohort dosing release.</p></div><div class="border-t border-outline-variant pt-3"><div class="grid grid-cols-2 gap-2 text-label-sm font-label-sm"><div class="bg-surface p-2 rounded border border-outline-variant"><span class="text-outline block">Priority</span><span class="font-semibold text-red-600">High</span></div><div class="bg-surface p-2 rounded border border-outline-variant"><span class="text-outline block">Due Date</span><span class="font-medium text-slate-800 font-code-md">18 Sep 2026</span></div><div class="bg-surface p-2 rounded border border-outline-variant"><span class="text-outline block">Assigned Owner</span><span class="font-medium text-slate-800">ClinOps Lead (Dr. Reynolds)</span></div><div class="bg-surface p-2 rounded border border-outline-variant"><span class="text-outline block">Status</span><span class="font-medium text-blue-700">In Progress</span></div></div></div></div><div class="p-3 border-t border-outline-variant bg-slate-50 flex items-center justify-end gap-2"><button class="h-8 px-4 bg-primary hover:bg-primary-container text-on-primary text-label-md font-label-md rounded font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-colors"><span class="material-symbols-outlined text-[16px]">check_circle</span><span>Update Status</span></button><button class="h-8 px-3 border border-outline-variant bg-white hover:bg-slate-100 text-slate-700 text-label-md font-label-md rounded font-medium flex items-center justify-center gap-1.5 shadow-sm transition-colors"><span class="material-symbols-outlined text-[16px]">file_download</span><span>Export CAPA</span></button></div></div>
+</div>
+<!-- Notice Footer -->
+<footer class="text-center py-2 text-label-sm font-label-sm text-slate-400 border-t border-outline-variant/60">Hackathon prototype · Synthetic clinical trial data only</footer>
+</main>
+</body></html>

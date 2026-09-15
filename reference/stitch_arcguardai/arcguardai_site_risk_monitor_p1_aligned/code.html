@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ArcGuardAI - Site Risk Monitor</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#0d9488",
+            "primary-hover": "#0f766e",
+            "surface": "#f8f9fc",
+            "on-surface": "#0b1c30",
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        },
+      },
+    }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    vertical-align: middle;
+    display: inline-block;
+    line-height: 1;
+  }
+  .material-symbols-outlined.fill {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  }
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+</style>
+</head>
+<body class="bg-surface text-[#0b1c30] antialiased flex h-screen overflow-hidden select-none font-sans">
+<!-- ================= SIDEBAR NAVIGATION RAIL ================= -->
+<aside class="w-60 h-screen bg-white border-r border-slate-200 flex flex-col justify-between p-3.5 z-30 shrink-0">
+<div>
+<!-- Logo & Subtitle -->
+<div class="flex items-center gap-2.5 px-2 py-2 mb-4">
+<div class="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center text-white shadow-xs">
+<span class="material-symbols-outlined text-[20px]">health_and_safety</span>
+</div>
+<div>
+<div class="text-sm font-bold text-slate-900 tracking-tight leading-none">ArcGuardAI</div>
+<div class="text-[10px] font-medium text-slate-500 tracking-wide mt-1">Clinical Risk Engine</div>
+</div>
+</div>
+<!-- Navigation links -->
+<nav class="space-y-1">
+<div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider px-3 mb-1">Primary</div>
+<a class="flex items-center justify-between px-3 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors rounded text-xs font-medium" href="#">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[18px] text-slate-400">dashboard</span>
+<span>Overview</span>
+</div>
+</a>
+<a class="flex items-center justify-between px-3 py-2 bg-teal-50 text-teal-800 border-l-4 border-primary font-semibold rounded-r transition-all text-xs" href="#">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[18px] text-primary fill">clinical_notes</span>
+<span>Site Risk</span>
+</div>
+</a>
+<a class="flex items-center justify-between px-3 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors rounded text-xs font-medium" href="#">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[18px] text-slate-400">warning</span>
+<span>Deviations</span>
+</div>
+<span class="px-1.5 py-0.5 bg-amber-50 border border-amber-200 text-amber-700 text-[10px] font-bold rounded">18</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors rounded text-xs font-medium" href="#">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[18px] text-slate-400">assignment_turned_in</span>
+<span>CAPA</span>
+</div>
+<span class="px-1.5 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-bold rounded">7</span>
+</a>
+<a class="flex items-center justify-between px-3 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors rounded text-xs font-medium" href="#">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[18px] text-slate-400">analytics</span>
+<span>Reports</span>
+</div>
+</a>
+<div class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider px-3 mb-1 mt-5">System</div>
+<a class="flex items-center justify-between px-3 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors rounded text-xs font-medium" href="#">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[18px] text-slate-400">policy</span>
+<span>Protocol Rules</span>
+</div>
+</a>
+<a class="flex items-center justify-between px-3 py-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors rounded text-xs font-medium" href="#">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[18px] text-slate-400">settings</span>
+<span>Settings</span>
+</div>
+</a>
+</nav>
+</div>
+<!-- Sidebar Bottom (Clean Prototype Badges) -->
+<div class="pt-3 border-t border-slate-200 space-y-2">
+<div class="px-2.5 py-2 bg-slate-50 border border-slate-200 rounded text-xs">
+<div class="flex items-center justify-between font-mono text-[11px] text-slate-700">
+<span class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-teal-500"></span>
+          200 Sites Monitored
+        </span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 px-2 text-[11px] text-slate-500">
+<span class="material-symbols-outlined text-[15px] text-slate-400">science</span>
+<span>Synthetic Demo Environment</span>
+</div>
+</div>
+</aside>
+<!-- ================= MAIN CONTENT WRAPPER ================= -->
+<div class="flex-1 flex flex-col h-screen overflow-hidden">
+<!-- ================= TOP UTILITY NAVBAR ================= -->
+<header class="h-14 bg-white border-b border-slate-200 flex items-center justify-between px-6 shrink-0 z-20">
+<div class="flex items-center gap-4">
+<!-- Left Protocol Context -->
+<div class="flex items-center gap-2 px-3 py-1 bg-slate-50 border border-slate-200 rounded text-xs font-semibold text-slate-800">
+<span class="w-2 h-2 rounded-full bg-teal-600"></span>
+<span>ARC-2026-01 | Phase III Global Cardiology | Prototype Risk Model</span>
+</div>
+<!-- Search Bar with Ctrl+K -->
+<div class="relative w-80">
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-[16px] text-slate-400">search</span>
+<input class="w-full h-8 pl-8 pr-14 text-xs bg-slate-50 border border-slate-200 rounded focus:outline-none focus:border-primary focus:bg-white text-slate-800 placeholder-slate-400 transition-colors" placeholder="Search sites, protocols, deviations..." type="text"/>
+<kbd class="absolute right-2 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[10px] font-mono bg-slate-200/70 border border-slate-300 text-slate-600 rounded">Ctrl+K</kbd>
+</div>
+</div>
+<!-- Right User & Status -->
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1.5 px-2.5 py-1 bg-teal-50 border border-teal-200 text-teal-800 rounded text-[11px] font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+<span>Synthetic Trial Data</span>
+</div>
+<div class="h-4 w-px bg-slate-200"></div>
+<div class="flex items-center gap-2.5 pl-1 cursor-pointer">
+<div class="w-7 h-7 rounded-full bg-teal-100 border border-teal-200 text-teal-800 font-bold text-xs flex items-center justify-center font-mono">RR</div>
+<div class="text-left leading-tight hidden lg:block">
+<div class="text-xs font-semibold text-slate-800">Dr. R. Reynolds</div>
+<div class="text-[10px] text-slate-500">Lead ClinOps</div>
+</div>
+</div>
+</div>
+</header>
+<!-- ================= WORKSPACE BODY (HEADER + 2 COLUMNS + FOOTER) ================= -->
+<div class="flex-1 flex flex-col overflow-hidden">
+<!-- PAGE HEADER AREA -->
+<div class="px-6 py-3.5 bg-white border-b border-slate-200 flex items-center justify-between shrink-0">
+<div>
+<h1 class="text-lg font-bold text-slate-900 tracking-tight leading-none">Site Risk Monitor</h1>
+<p class="text-xs text-slate-500 mt-1">Identify high-risk sites and understand the deviations driving their risk.</p>
+</div>
+<div class="flex items-center gap-2.5">
+<div class="flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-medium rounded">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span>Analysis Current</span>
+</div>
+<button class="h-8 px-3 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium rounded inline-flex items-center gap-1.5 transition-colors shadow-xs">
+<span class="material-symbols-outlined text-[15px] text-slate-500">refresh</span>
+<span>Refresh Analysis</span>
+</button>
+</div>
+</div>
+<!-- MAIN TWO-COLUMN WORKSPACE -->
+<div class="flex-1 flex overflow-hidden p-5 gap-5">
+<!-- LEFT COLUMN: SUMMARY CARDS + TABLE (~65%) -->
+<section class="w-[65%] flex flex-col gap-4 overflow-hidden">
+<!-- STRICTLY 3 SUMMARY CARDS -->
+<div class="grid grid-cols-3 gap-3 shrink-0">
+<!-- Card 1: Sites Monitored -->
+<div class="bg-white p-3.5 rounded-lg border border-slate-200 shadow-xs flex items-center justify-between">
+<div>
+<div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">Sites Monitored</div>
+<div class="text-2xl font-bold font-mono text-slate-900 mt-0.5">200</div>
+<div class="text-[11px] text-slate-500 mt-0.5">Active clinical trial sites</div>
+</div>
+<div class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">
+<span class="material-symbols-outlined text-[20px]">domain</span>
+</div>
+</div>
+<!-- Card 2: High-Risk Sites -->
+<div class="bg-white p-3.5 rounded-lg border border-red-200 bg-red-50/10 shadow-xs flex items-center justify-between">
+<div>
+<div class="flex items-center gap-1.5">
+<span class="text-[11px] font-semibold text-red-700 uppercase tracking-wider">High-Risk Sites</span>
+<span class="px-1.5 py-0.2 bg-red-100 text-red-700 text-[10px] font-bold rounded">Action Required</span>
+</div>
+<div class="text-2xl font-bold font-mono text-red-600 mt-0.5">12</div>
+<div class="text-[11px] text-red-600/80 mt-0.5">Sites exceeding risk threshold</div>
+</div>
+<div class="w-9 h-9 rounded-lg bg-red-100 flex items-center justify-center text-red-600">
+<span class="material-symbols-outlined text-[20px] fill">warning</span>
+</div>
+</div>
+<!-- Card 3: Major Deviations -->
+<div class="bg-white p-3.5 rounded-lg border border-amber-200 bg-amber-50/10 shadow-xs flex items-center justify-between">
+<div>
+<div class="flex items-center gap-1.5">
+<span class="text-[11px] font-semibold text-amber-800 uppercase tracking-wider">Major Deviations</span>
+<span class="px-1.5 py-0.2 bg-amber-100 text-amber-800 text-[10px] font-bold rounded">Critical Impact</span>
+</div>
+<div class="text-2xl font-bold font-mono text-amber-700 mt-0.5">18</div>
+<div class="text-[11px] text-amber-700/80 mt-0.5">Flagged across active protocols</div>
+</div>
+<div class="w-9 h-9 rounded-lg bg-amber-100 flex items-center justify-center text-amber-700">
+<span class="material-symbols-outlined text-[20px]">report_problem</span>
+</div>
+</div>
+</div>
+<!-- SITE RISK TABLE CONTAINER -->
+<div class="flex-1 bg-white rounded-lg border border-slate-200 shadow-xs flex flex-col overflow-hidden">
+<!-- Table Bar -->
+<div class="px-4 py-2.5 border-b border-slate-200 flex items-center justify-between bg-slate-50/70 shrink-0">
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-slate-800 tracking-tight">Monitored Sites (200)</span>
+<span class="text-[11px] text-slate-500 font-mono">Ranked by risk score</span>
+</div>
+<div class="relative w-52">
+<span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-[14px] text-slate-400">filter_list</span>
+<input class="w-full h-7 pl-6 pr-2.5 text-xs bg-white border border-slate-200 rounded focus:outline-none focus:border-primary text-slate-700 placeholder-slate-400" placeholder="Filter site or city..." type="text"/>
+</div>
+</div>
+<!-- Table -->
+<div class="flex-1 overflow-y-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-slate-50 border-b border-slate-200 text-[11px] uppercase tracking-wider text-slate-500 font-semibold sticky top-0 z-10">
+<tr class="h-9">
+<th class="px-4 py-2">Site</th>
+<th class="px-4 py-2 text-center">Compliance</th>
+<th class="px-4 py-2 text-center">Major Deviations</th>
+<th class="px-4 py-2 text-center">Open CAPAs</th>
+<th class="px-4 py-2 text-center">Risk Score</th>
+<th class="px-4 py-2 text-center">Risk Level</th>
+<th class="px-4 py-2 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-xs">
+<!-- Row 1 (SITE-101 Selected) -->
+<tr class="bg-teal-50/60 border-l-4 border-primary transition-colors">
+<td class="px-4 py-3 font-semibold text-slate-900">
+<div class="flex items-center gap-1.5">
+<span class="font-mono text-teal-900 font-bold">SITE-101</span>
+<span class="text-slate-400">·</span>
+<span class="text-slate-700">Boston</span>
+</div>
+</td>
+<td class="px-4 py-3 text-center font-mono font-bold text-red-600">83.7%</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-block px-2 py-0.5 bg-red-100 border border-red-200 text-red-700 font-semibold rounded text-[11px]">7 Major</span>
+</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-block px-2 py-0.5 bg-red-50 text-red-700 font-medium rounded text-[11px]">2 Open</span>
+</td>
+<td class="px-4 py-3 text-center font-mono font-bold text-red-600 text-sm">86</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-red-100 border border-red-200 text-red-800 text-[11px] font-bold rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>CRITICAL
+                    </span>
+</td>
+<td class="px-4 py-3 text-right">
+<button class="h-6 px-2.5 bg-primary text-white text-[11px] rounded font-medium inline-flex items-center gap-1 shadow-xs">
+<span>Selected</span>
+<span class="material-symbols-outlined text-[13px]">check</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 (SITE-204) -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="px-4 py-3 font-semibold text-slate-800">
+<div class="flex items-center gap-1.5">
+<span class="font-mono text-slate-900 font-semibold">SITE-204</span>
+<span class="text-slate-400">·</span>
+<span class="text-slate-600">Chicago</span>
+</div>
+</td>
+<td class="px-4 py-3 text-center font-mono font-semibold text-amber-600">92.1%</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-block px-2 py-0.5 bg-amber-50 border border-amber-200 text-amber-800 font-medium rounded text-[11px]">4 Major</span>
+</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-block px-2 py-0.5 bg-slate-100 text-slate-700 font-medium rounded text-[11px]">1 Open</span>
+</td>
+<td class="px-4 py-3 text-center font-mono font-bold text-orange-600 text-sm">74</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-orange-50 border border-orange-200 text-orange-700 text-[11px] font-semibold rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>HIGH
+                    </span>
+</td>
+<td class="px-4 py-3 text-right">
+<button class="h-6 px-2.5 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-[11px] rounded font-medium inline-flex items-center gap-0.5">
+<span>Inspect</span>
+<span class="material-symbols-outlined text-[13px]">chevron_right</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 (SITE-309) -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="px-4 py-3 font-semibold text-slate-800">
+<div class="flex items-center gap-1.5">
+<span class="font-mono text-slate-900 font-semibold">SITE-309</span>
+<span class="text-slate-400">·</span>
+<span class="text-slate-600">Atlanta</span>
+</div>
+</td>
+<td class="px-4 py-3 text-center font-mono font-semibold text-amber-600">93.5%</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-block px-2 py-0.5 bg-amber-50 border border-amber-200 text-amber-800 font-medium rounded text-[11px]">3 Major</span>
+</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-block px-2 py-0.5 bg-slate-100 text-slate-700 font-medium rounded text-[11px]">1 Open</span>
+</td>
+<td class="px-4 py-3 text-center font-mono font-bold text-orange-600 text-sm">63</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-orange-50 border border-orange-200 text-orange-700 text-[11px] font-semibold rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span>HIGH
+                    </span>
+</td>
+<td class="px-4 py-3 text-right">
+<button class="h-6 px-2.5 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-[11px] rounded font-medium inline-flex items-center gap-0.5">
+<span>Inspect</span>
+<span class="material-symbols-outlined text-[13px]">chevron_right</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 (SITE-412) -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="px-4 py-3 font-semibold text-slate-800">
+<div class="flex items-center gap-1.5">
+<span class="font-mono text-slate-900 font-semibold">SITE-412</span>
+<span class="text-slate-400">·</span>
+<span class="text-slate-600">Seattle</span>
+</div>
+</td>
+<td class="px-4 py-3 text-center font-mono font-semibold text-emerald-600">96.2%</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-block px-2 py-0.5 bg-slate-100 text-slate-700 font-medium rounded text-[11px]">2 Major</span>
+</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-block px-2 py-0.5 bg-slate-100 text-slate-500 font-medium rounded text-[11px]">0 Open</span>
+</td>
+<td class="px-4 py-3 text-center font-mono font-semibold text-amber-600 text-sm">41</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-amber-50 border border-amber-200 text-amber-800 text-[11px] font-semibold rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>MODERATE
+                    </span>
+</td>
+<td class="px-4 py-3 text-right">
+<button class="h-6 px-2.5 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-[11px] rounded font-medium inline-flex items-center gap-0.5">
+<span>Inspect</span>
+<span class="material-symbols-outlined text-[13px]">chevron_right</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 (SITE-517) -->
+<tr class="hover:bg-slate-50/80 transition-colors">
+<td class="px-4 py-3 font-semibold text-slate-800">
+<div class="flex items-center gap-1.5">
+<span class="font-mono text-slate-900 font-semibold">SITE-517</span>
+<span class="text-slate-400">·</span>
+<span class="text-slate-600">Phoenix</span>
+</div>
+</td>
+<td class="px-4 py-3 text-center font-mono font-semibold text-emerald-600">98.1%</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-block px-2 py-0.5 bg-slate-100 text-slate-700 font-medium rounded text-[11px]">1 Major</span>
+</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-block px-2 py-0.5 bg-slate-100 text-slate-500 font-medium rounded text-[11px]">0 Open</span>
+</td>
+<td class="px-4 py-3 text-center font-mono font-semibold text-teal-600 text-sm">18</td>
+<td class="px-4 py-3 text-center">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-teal-50 border border-teal-200 text-teal-800 text-[11px] font-semibold rounded-full">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>LOW
+                    </span>
+</td>
+<td class="px-4 py-3 text-right">
+<button class="h-6 px-2.5 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-[11px] rounded font-medium inline-flex items-center gap-0.5">
+<span>Inspect</span>
+<span class="material-symbols-outlined text-[13px]">chevron_right</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer info -->
+<div class="h-9 px-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500 shrink-0">
+<span>Showing top risk sites out of 200 monitored sites</span>
+<div class="flex items-center gap-1">
+<button class="px-2 py-0.5 bg-primary text-white font-medium rounded text-[11px]">1</button>
+<button class="px-2 py-0.5 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded text-[11px]">2</button>
+<button class="px-2 py-0.5 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 rounded text-[11px]">3</button>
+</div>
+</div>
+</div>
+</section>
+<!-- RIGHT COLUMN: SITE-101 INSPECTION DRAWER (~35%) -->
+<aside class="w-[35%] bg-white rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between overflow-hidden">
+<!-- Drawer Header -->
+<div class="p-4 border-b border-slate-200 bg-slate-50/70 shrink-0">
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-2">
+<span class="font-mono font-bold text-base text-slate-900">SITE-101 · Boston</span>
+<span class="px-2 py-0.5 bg-red-100 border border-red-200 text-red-800 font-bold text-[11px] rounded-full flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-red-600"></span>Critical Risk
+              </span>
+</div>
+<div class="flex items-center gap-1 text-slate-400">
+<button class="p-1 hover:text-slate-700 rounded transition-colors" title="Minimize">
+<span class="material-symbols-outlined text-[18px]">remove</span>
+</button>
+<button class="p-1 hover:text-slate-700 rounded transition-colors" title="Close">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+<div class="text-xs text-slate-500 font-medium">Selected Site Inspection</div>
+</div>
+<!-- Drawer Content Body -->
+<div class="flex-1 overflow-y-auto p-4 space-y-4">
+<!-- Large Composite Risk Score Card -->
+<div class="p-3.5 bg-red-50/50 border border-red-200 rounded-lg flex items-center justify-between">
+<div>
+<div class="text-[10px] font-semibold text-red-700 uppercase tracking-wider">Composite Risk Score</div>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="text-3xl font-bold text-red-600 font-mono leading-none">86</span>
+<span class="text-xs text-red-600 font-semibold font-mono">/ 100</span>
+</div>
+<div class="text-xs text-red-700 font-medium mt-1">Immediate monitoring escalation required</div>
+</div>
+<div class="w-10 h-10 rounded-full bg-red-100 border border-red-200 flex items-center justify-center text-red-600">
+<span class="material-symbols-outlined text-[22px] fill">priority_high</span>
+</div>
+</div>
+<!-- Section: TOP RISK DRIVERS -->
+<div>
+<div class="flex items-center justify-between mb-2.5">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-800">Top Risk Drivers</h3>
+<span class="text-[10px] text-slate-400 font-mono">Contribution</span>
+</div>
+<div class="space-y-3 bg-slate-50/80 p-3.5 rounded-lg border border-slate-200/90">
+<!-- Driver 1: Wrong Dosing -->
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-slate-800 font-medium flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-red-600"></span>Wrong Dosing
+                  </span>
+<span class="font-mono font-bold text-red-600">34%</span>
+</div>
+<div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+<div class="h-full bg-red-600 rounded-full" style="width: 34%;"></div>
+</div>
+</div>
+<!-- Driver 2: Missed Visits -->
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-slate-800 font-medium flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-orange-500"></span>Missed Visits
+                  </span>
+<span class="font-mono font-semibold text-orange-600">26%</span>
+</div>
+<div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+<div class="h-full bg-orange-500 rounded-full" style="width: 26%;"></div>
+</div>
+</div>
+<!-- Driver 3: Banned Co-medication -->
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-slate-800 font-medium flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>Banned Co-medication
+                  </span>
+<span class="font-mono font-semibold text-amber-600">22%</span>
+</div>
+<div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+<div class="h-full bg-amber-500 rounded-full" style="width: 22%;"></div>
+</div>
+</div>
+<!-- Driver 4: Documentation Issues -->
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-slate-800 font-medium flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-slate-400"></span>Documentation Issues
+                  </span>
+<span class="font-mono font-semibold text-slate-600">18%</span>
+</div>
+<div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+<div class="h-full bg-slate-400 rounded-full" style="width: 18%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section: RISK INSIGHT -->
+<div class="p-3.5 bg-teal-50/50 rounded-lg border border-teal-200 space-y-2">
+<div class="flex items-center gap-1.5 text-teal-800">
+<span class="material-symbols-outlined text-[17px] fill">psychology</span>
+<h3 class="text-xs font-bold uppercase tracking-wide">Risk Insight</h3>
+</div>
+<div class="text-xs text-slate-700 leading-relaxed">
+<span class="font-semibold text-slate-900">Key Insight:</span> Repeated wrong-dose events and missed visits indicate a persistent site-level process issue.
+            </div>
+<div class="pt-1.5 border-t border-teal-200/60 text-xs text-slate-700 leading-relaxed">
+<span class="font-semibold text-teal-900">Recommended Action:</span> Conduct focused monitoring, retrain site staff, and initiate CAPA.
+            </div>
+</div>
+</div>
+<!-- Footer Action Buttons (STRICTLY TWO BUTTONS ONLY) -->
+<div class="p-4 border-t border-slate-200 bg-white shrink-0">
+<div class="grid grid-cols-2 gap-2.5">
+<button class="h-9 bg-primary hover:bg-primary-hover text-white rounded text-xs font-semibold flex items-center justify-center gap-1 shadow-xs transition-colors">
+<span>View Deviations</span>
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</button>
+<button class="h-9 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded text-xs font-semibold flex items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[15px] text-slate-500">add_task</span>
+<span>Create CAPA</span>
+</button>
+</div>
+</div>
+</aside>
+</div>
+<!-- STANDARD SUBTLE BOTTOM FOOTER -->
+<footer class="h-8 border-t border-slate-200 bg-white flex items-center justify-center text-[11px] text-slate-400 shrink-0">
+      Hackathon prototype · Synthetic clinical trial data only
+    </footer>
+</div>
+</div>
+</body></html>

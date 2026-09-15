@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+data/
+.venv/
+README.md
+DECISIONS.md
+FLOW.md

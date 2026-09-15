@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ArcGuardAI - Settings &amp; System Configuration</title>
+<!-- Material Symbols Outlined font -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-surface": "#213145",
+            "surface-bright": "#f8f9ff",
+            "tertiary-container": "#007bb9",
+            "outline": "#6d7a77",
+            "on-tertiary": "#ffffff",
+            "primary": "#00685f",
+            "tertiary": "#006194",
+            "surface-dim": "#cbdbf5",
+            "surface": "#f8f9ff",
+            "background": "#f8f9ff",
+            "secondary-container": "#dae2fd",
+            "surface-container-lowest": "#ffffff",
+            "surface-variant": "#d3e4fe",
+            "on-tertiary-fixed-variant": "#004b73",
+            "on-tertiary-container": "#fdfcff",
+            "inverse-primary": "#6bd8cb",
+            "on-background": "#0b1c30",
+            "on-surface": "#0b1c30",
+            "on-error": "#ffffff",
+            "on-secondary": "#ffffff",
+            "on-primary-container": "#f4fffc",
+            "error": "#ba1a1a",
+            "on-primary-fixed": "#00201d",
+            "on-secondary-fixed-variant": "#3f465c",
+            "tertiary-fixed-dim": "#93ccff",
+            "primary-fixed-dim": "#6bd8cb",
+            "surface-container": "#e5eeff",
+            "inverse-on-surface": "#eaf1ff",
+            "surface-tint": "#006a61",
+            "surface-container-highest": "#d3e4fe",
+            "primary-fixed": "#89f5e7",
+            "on-primary": "#ffffff",
+            "primary-container": "#008378",
+            "secondary": "#565e74",
+            "on-secondary-container": "#5c647a",
+            "secondary-fixed-dim": "#bec6e0",
+            "surface-container-high": "#dce9ff",
+            "outline-variant": "#bcc9c6",
+            "on-error-container": "#93000a",
+            "on-primary-fixed-variant": "#005049",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed": "#001d31",
+            "on-secondary-fixed": "#131b2e",
+            "surface-container-low": "#eff4ff",
+            "on-surface-variant": "#3d4947",
+            "secondary-fixed": "#dae2fd",
+            "tertiary-fixed": "#cce5ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "space-2xl": "2rem",
+            "space-sm": "0.5rem",
+            "space-xl": "1.5rem",
+            "gutter-dense": "0.75rem",
+            "margin": "1.5rem",
+            "space-lg": "1rem",
+            "space-md": "0.75rem",
+            "gutter": "1rem",
+            "margin-compact": "1rem"
+          },
+          "fontFamily": {
+            "code-md": ["JetBrains Mono"],
+            "headline-md": ["Inter"],
+            "body-md": ["Inter"],
+            "label-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "label-sm": ["Inter"],
+            "headline-lg": ["Inter"],
+            "title-md": ["Inter"],
+            "display-lg": ["Inter"],
+            "label-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-sm": ["Inter"]
+          },
+          "fontSize": {
+            "code-md": ["12px", { "lineHeight": "16px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "label-md": ["11px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "body-lg": ["15px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "title-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "600" }],
+            "display-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 18px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 14px;
+      width: 14px;
+      border-radius: 9999px;
+      background: #00685f;
+      cursor: pointer;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 2px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen selection:bg-surface-container-high selection:text-primary">
+<!-- ========================================================================= -->
+<!-- SIDE NAVIGATION RAIL (Shared Component JSON Conforming) -->
+<!-- ========================================================================= -->
+<aside class="fixed top-0 left-0 h-screen w-60 flex flex-col justify-between p-gutter-dense z-30 bg-surface-container-lowest dark:bg-inverse-surface border-r border-outline-variant dark:border-outline">
+<!-- Brand / Product Header -->
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center gap-space-sm px-space-xs py-space-xs">
+<div class="h-8 w-8 rounded-lg bg-primary text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined" data-icon="policy">policy</span>
+</div>
+<div class="flex flex-col leading-tight">
+<span class="text-title-md font-title-md font-semibold text-primary dark:text-inverse-primary tracking-tight">ArcGuardAI</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant dark:text-surface-dim">Clinical Risk Engine</span>
+</div>
+</div>
+<!-- Navigation Tabs (Settings tab explicitly marked ACTIVE) -->
+<nav class="flex flex-col gap-0.5 mt-space-xs">
+<!-- Overview -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant dark:text-surface-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-medium hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors rounded" href="#">
+<span class="material-symbols-outlined text-outline" data-icon="dashboard">dashboard</span>
+<span class="text-label-md font-label-md">Overview</span>
+</a>
+<!-- Site Risk Monitor -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant dark:text-surface-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-medium hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors rounded" href="#">
+<span class="material-symbols-outlined text-outline" data-icon="clinical_notes">clinical_notes</span>
+<span class="text-label-md font-label-md">Site Risk Monitor</span>
+</a>
+<!-- Protocol Deviations -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant dark:text-surface-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-medium hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors rounded" href="#">
+<span class="material-symbols-outlined text-outline" data-icon="warning">warning</span>
+<span class="text-label-md font-label-md">Protocol Deviations</span>
+</a>
+<!-- Participant Review -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant dark:text-surface-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-medium hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors rounded" href="#">
+<span class="material-symbols-outlined text-outline" data-icon="group">group</span>
+<span class="text-label-md font-label-md">Participant Review</span>
+</a>
+<!-- CAPA Management -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant dark:text-surface-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-medium hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors rounded" href="#">
+<span class="material-symbols-outlined text-outline" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span class="text-label-md font-label-md">CAPA Management</span>
+</a>
+<!-- Reports -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant dark:text-surface-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-medium hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors rounded" href="#">
+<span class="material-symbols-outlined text-outline" data-icon="analytics">analytics</span>
+<span class="text-label-md font-label-md">Reports</span>
+</a>
+<!-- Protocol Rules -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant dark:text-surface-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-medium hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors rounded" href="#">
+<span class="material-symbols-outlined text-outline" data-icon="policy">policy</span>
+<span class="text-label-md font-label-md">Protocol Rules</span>
+</a>
+<!-- Settings (ACTIVE NAVIGATION TAB) -->
+<a class="flex items-center gap-2 px-3 py-2 bg-surface-container-low dark:bg-surface-container text-primary dark:text-inverse-primary border-l-2 border-primary dark:border-inverse-primary font-semibold transition-all duration-150 rounded-r" href="#">
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary" data-icon="settings">settings</span>
+<span class="text-label-md font-label-md">Settings</span>
+</a>
+</nav>
+</div>
+<!-- Sidebar Footer / System Telemetry -->
+<div class="pt-space-sm border-t border-outline-variant dark:border-outline flex flex-col gap-space-xs"><div class="flex items-center justify-between px-space-xs"><span class="inline-flex items-center gap-1.5 text-label-sm font-label-sm text-primary dark:text-inverse-primary"><span class="material-symbols-outlined text-xs" data-icon="check_circle">check_circle</span>Synthetic Demo · 200 Sites</span><span class="text-label-sm font-label-sm text-outline font-code-md">v1.0</span></div><div class="px-space-xs py-1.5 bg-surface-container-low dark:bg-surface-container rounded border border-outline-variant/60 text-label-sm font-label-sm text-on-surface-variant"><span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-primary"></span>Dataset: Synthetic Clinical Data</span></div><div class="px-space-xs text-label-sm font-label-sm text-outline">Hackathon prototype · 200 Sites</div></div>
+</aside>
+<!-- ========================================================================= -->
+<!-- TOP NAVIGATION BAR (Shared Component JSON Conforming) -->
+<!-- ========================================================================= -->
+<header class="fixed top-0 right-0 left-60 h-14 flex items-center justify-between px-space-lg z-20 bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant dark:border-outline"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs text-on-surface font-title-md text-title-md"><span class="text-title-md font-title-md font-semibold text-on-surface dark:text-inverse-on-surface">ARC-2026-01 | Phase III Cardiology | 200 Sites</span><span class="material-symbols-outlined text-outline cursor-pointer hover:text-primary" data-icon="expand_more">expand_more</span></div><div class="hidden lg:flex items-center gap-2"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-primary font-label-sm text-label-sm border border-outline-variant/80"><span class="material-symbols-outlined text-xs" data-icon="biotech">biotech</span>Prototype Configuration</span></div></div><div class="flex items-center gap-space-md"><div class="relative w-64 hidden xl:block"><span class="absolute inset-y-0 left-0 flex items-center pl-2 text-outline pointer-events-none"><span class="material-symbols-outlined" data-icon="search">search</span></span><input class="w-full h-8 pl-8 pr-3 text-body-sm font-body-sm bg-surface rounded border border-outline-variant focus:outline-none focus:border-primary text-on-surface" placeholder="Search protocol rules, sites... (Ctrl+K)" type="text"/></div><div class="flex items-center gap-space-sm"><button class="h-8 px-2.5 rounded bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors inline-flex items-center gap-1 shadow-sm"><span class="material-symbols-outlined text-sm" data-icon="add">add</span><span>New CAPA</span></button><button class="h-8 w-8 flex items-center justify-center rounded text-on-surface-variant hover:bg-surface-container-low transition-colors" title="Notifications"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button><button class="h-8 w-8 flex items-center justify-center rounded text-on-surface-variant hover:bg-surface-container-low transition-colors" title="Help"><span class="material-symbols-outlined" data-icon="help">help</span></button><div class="h-4 w-px bg-outline-variant mx-1"></div><div class="flex items-center gap-2 pl-1 cursor-pointer"><div class="h-7 w-7 rounded-full bg-surface-container-high text-primary flex items-center justify-center font-label-md text-label-md border border-outline-variant">RR</div><div class="hidden sm:flex flex-col text-left leading-none"><span class="text-label-md font-label-md text-on-surface">Dr. R. Reynolds</span><span class="text-label-sm font-label-sm text-outline">Lead ClinOps</span></div></div></div></div></header>
+<!-- ========================================================================= -->
+<!-- MAIN WORKSPACE CANVAS -->
+<!-- ========================================================================= -->
+<main class="ml-60 pt-14 pb-16 px-space-xl min-h-screen bg-background text-on-surface"><div class="max-w-7xl mx-auto flex flex-col gap-space-lg pt-space-lg"><div class="w-full flex items-center justify-between px-space-md py-2 bg-surface-container-low border border-outline-variant/80 rounded"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-sm" data-icon="biotech">biotech</span><span class="text-label-md font-label-md text-primary">Synthetic Demo Environment</span><span class="text-outline">·</span><span class="text-body-sm font-body-sm text-on-surface-variant">Synthetic Clinical Trial Data Active</span><span class="text-outline">·</span><span class="text-body-sm font-body-sm text-on-surface-variant">200 Sites · 5,284 Patient Visits</span></div><div class="flex items-center gap-1 text-label-sm font-label-sm font-code-md text-outline"><span>DEMO RUN: #ARC-P1-2026</span></div></div><div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md pb-space-sm border-b border-outline-variant"><div class="flex flex-col gap-1"><div class="flex items-center gap-1.5 text-label-sm font-label-sm text-outline"><a class="hover:text-primary transition-colors" href="#">Studies</a><span class="material-symbols-outlined text-xs" data-icon="chevron_right">chevron_right</span><span class="font-code-md">ARC-2026-01</span><span class="material-symbols-outlined text-xs" data-icon="chevron_right">chevron_right</span><span class="text-on-surface font-medium">Settings</span></div><h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">Settings &amp; Configuration</h1><p class="text-body-md font-body-md text-on-surface-variant">Configure study parameters and transparent site-risk scoring.</p></div><div class="flex items-center gap-space-sm self-start md:self-auto"><button class="h-8 px-3 rounded bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md text-label-md hover:bg-surface-container-low transition-colors inline-flex items-center gap-1.5"><span class="material-symbols-outlined text-outline text-sm" data-icon="restart_alt">restart_alt</span>Reset Demo Defaults</button><button class="h-8 px-3.5 rounded bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors inline-flex items-center gap-1.5 shadow-sm"><span class="material-symbols-outlined text-on-primary text-sm" data-icon="check">check</span>Save Settings</button></div></div><div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg"><section class="xl:col-span-12 bg-surface-container-lowest border border-outline-variant rounded p-space-lg shadow-sm"><div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/60"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary" data-icon="clinical_notes">clinical_notes</span><h2 class="text-headline-sm font-headline-sm text-on-surface">Study Configuration</h2></div><span class="text-label-sm font-label-sm font-code-md text-outline px-2 py-0.5 bg-surface rounded border border-outline-variant">Core Protocol Data</span></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-md"><div class="flex flex-col gap-1"><label class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Study Identifier</label><input class="w-full h-8 px-3 bg-surface-container-low text-on-surface font-code-md text-code-md border border-outline-variant rounded cursor-not-allowed" readonly="" type="text" value="ARC-2026-01"/><span class="text-label-sm font-label-sm text-outline">Clinical trial code</span></div><div class="flex flex-col gap-1"><label class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Protocol Version</label><input class="w-full h-8 px-3 bg-surface-container-low text-on-surface font-body-sm text-body-sm border border-outline-variant rounded cursor-not-allowed" readonly="" type="text" value="v3.2"/><span class="text-label-sm font-label-sm text-outline">Active protocol baseline</span></div><div class="flex flex-col gap-1"><label class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Trial Phase &amp; Design</label><input class="w-full h-8 px-3 bg-surface-container-low text-on-surface font-body-sm text-body-sm border border-outline-variant rounded cursor-not-allowed" readonly="" type="text" value="Phase III Cardiology"/><span class="text-label-sm font-label-sm text-outline">Therapeutic evaluation</span></div><div class="flex flex-col gap-1"><label class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Sites Monitored</label><div class="flex items-center h-8 px-3 bg-surface-container-low text-on-surface font-body-sm text-body-sm border border-outline-variant rounded justify-between"><span class="font-code-md text-primary font-medium">200 Sites</span></div><span class="text-label-sm font-label-sm text-outline">Active clinical investigation centers</span></div><div class="flex flex-col gap-1"><label class="text-label-sm font-label-sm text-outline uppercase tracking-wider">Patient Visits</label><div class="flex items-center h-8 px-3 bg-surface-container-low text-on-surface font-body-sm text-body-sm border border-outline-variant rounded justify-between"><span class="font-code-md text-primary font-medium">5,284 Visits</span></div><span class="text-label-sm font-label-sm text-outline">Recorded participant encounters</span></div></div></section><section class="xl:col-span-7 bg-surface-container-lowest border border-outline-variant rounded p-space-lg shadow-sm flex flex-col justify-between"><div><div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/60"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary" data-icon="tune">tune</span><h2 class="text-headline-sm font-headline-sm text-on-surface">Risk Scoring Thresholds</h2></div><span class="text-label-sm font-label-sm text-on-surface-variant font-code-md">Scale 0–100</span></div><p class="text-body-sm font-body-sm text-on-surface-variant mb-space-md">Configure composite multi-parametric thresholds used to classify site vulnerability and trigger automated investigative workflows.</p><div class="mb-space-lg"><div class="flex justify-between text-label-sm font-label-sm font-code-md text-outline mb-1"><span>0</span><span>30</span><span>60</span><span>80</span><span>100</span></div><div class="h-3 w-full rounded overflow-hidden flex bg-surface-container border border-outline-variant"><div class="bg-[#10b981] h-full" style="width: 30%" title="Low Risk (0–29)"></div><div class="bg-[#f59e0b] h-full" style="width: 30%" title="Moderate Risk (30–59)"></div><div class="bg-[#f97316] h-full" style="width: 20%" title="High Risk (60–79)"></div><div class="bg-[#ef4444] h-full" style="width: 20%" title="Critical Risk (80–100)"></div></div><div class="flex justify-between text-label-sm font-label-sm text-outline mt-1 px-1"><span class="text-[#059669] font-medium">Low (0–29)</span><span class="text-[#d97706] font-medium">Moderate (30–59)</span><span class="text-[#ea580c] font-medium">High (60–79)</span><span class="text-[#dc2626] font-medium">Critical (80–100)</span></div></div><div class="space-y-space-sm"><div class="p-2.5 rounded border border-outline-variant/70 bg-surface flex flex-col sm:flex-row sm:items-center justify-between gap-2"><div class="flex items-start gap-2.5"><span class="px-2 py-0.5 rounded text-label-md font-label-md bg-[#f0fdf4] text-[#16a34a] border border-[#bbf7d0]">0–29 Low Risk</span><p class="text-body-sm font-body-sm text-on-surface">Routine monitoring</p></div><div class="flex items-center gap-1 self-end sm:self-auto font-code-md text-body-sm"><span class="text-outline text-label-sm">Max:</span><input class="w-14 h-7 px-1.5 text-center text-body-sm bg-surface-container-lowest border border-outline-variant rounded" type="number" value="29"/></div></div><div class="p-2.5 rounded border border-outline-variant/70 bg-surface flex flex-col sm:flex-row sm:items-center justify-between gap-2"><div class="flex items-start gap-2.5"><span class="px-2 py-0.5 rounded text-label-md font-label-md bg-[#fffbeb] text-[#d97706] border border-[#fde68a]">30–59 Moderate</span><p class="text-body-sm font-body-sm text-on-surface">Closer review</p></div><div class="flex items-center gap-1 self-end sm:self-auto font-code-md text-body-sm"><span class="text-outline text-label-sm">Max:</span><input class="w-14 h-7 px-1.5 text-center text-body-sm bg-surface-container-lowest border border-outline-variant rounded" type="number" value="59"/></div></div><div class="p-2.5 rounded border border-outline-variant/70 bg-surface flex flex-col sm:flex-row sm:items-center justify-between gap-2"><div class="flex items-start gap-2.5"><span class="px-2 py-0.5 rounded text-label-md font-label-md bg-[#fff7ed] text-[#ea580c] border border-[#fed7aa]">60–79 High Risk</span><p class="text-body-sm font-body-sm text-on-surface">Priority review</p></div><div class="flex items-center gap-1 self-end sm:self-auto font-code-md text-body-sm"><span class="text-outline text-label-sm">Max:</span><input class="w-14 h-7 px-1.5 text-center text-body-sm bg-surface-container-lowest border border-outline-variant rounded" type="number" value="79"/></div></div><div class="p-2.5 rounded border border-outline-variant/70 bg-surface flex flex-col sm:flex-row sm:items-center justify-between gap-2"><div class="flex items-start gap-2.5"><span class="px-2 py-0.5 rounded text-label-md font-label-md bg-[#fef2f2] text-[#dc2626] border border-[#fecaca] inline-flex items-center gap-1"><span class="material-symbols-outlined text-xs" data-icon="error">error</span>80–100 Critical</span><p class="text-body-sm font-body-sm text-on-surface">Immediate attention</p></div><div class="flex items-center gap-1 self-end sm:self-auto font-code-md text-body-sm"><span class="text-outline text-label-sm">Max:</span><input class="w-14 h-7 px-1.5 text-center text-body-sm bg-surface-container-lowest border border-outline-variant rounded" type="number" value="100"/></div></div></div></div><div class="pt-space-md mt-space-md border-t border-outline-variant/60 flex items-center justify-between text-label-sm font-label-sm text-outline"><span>Deterministic Scoring: ArcGuard Site Model</span><span class="text-primary font-medium cursor-pointer hover:underline">Reset Demo Defaults</span></div></section><section class="xl:col-span-5 bg-surface-container-lowest border border-outline-variant rounded p-space-lg shadow-sm flex flex-col justify-between"><div><div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/60"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary" data-icon="functions">functions</span><h2 class="text-headline-sm font-headline-sm text-on-surface">Severity Weights &amp; Risk Formula</h2></div><span class="text-label-sm font-label-sm font-code-md text-outline">Multipliers</span></div><p class="text-body-sm font-body-sm text-on-surface-variant mb-space-md">Severity weights influence the site-level composite risk score.</p><div class="space-y-space-md"><div class="flex flex-col gap-1.5 p-space-sm rounded bg-surface border border-outline-variant/60"><div class="flex items-center justify-between"><div class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-error"></span><span class="text-label-md font-label-md text-on-surface">Major Deviation Weight</span></div><span class="font-code-md text-code-md text-primary font-semibold px-2 py-0.5 bg-surface-container-lowest border border-outline-variant rounded">5.0x</span></div><input class="w-full accent-primary h-1.5 bg-surface-container-high rounded cursor-pointer" max="10.0" min="1.0" step="0.5" type="range" value="5.0"/><span class="text-label-sm font-label-sm text-on-surface-variant">Direct safety or primary efficacy impact</span></div><div class="flex flex-col gap-1.5 p-space-sm rounded bg-surface border border-outline-variant/60"><div class="flex items-center justify-between"><div class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-[#f59e0b"></span><span class="text-label-md font-label-md text-on-surface">Minor Deviation Weight</span></div><span class="font-code-md text-code-md text-primary font-semibold px-2 py-0.5 bg-surface-container-lowest border border-outline-variant rounded">1.5x</span></div><input class="w-full accent-primary h-1.5 bg-surface-container-high rounded cursor-pointer" max="5.0" min="0.5" step="0.25" type="range" value="1.5"/><span class="text-label-sm font-label-sm text-on-surface-variant">Protocol timing window slips, missed optional biomarker</span></div><div class="flex flex-col gap-1.5 p-space-sm rounded bg-surface border border-outline-variant/60"><div class="flex items-center justify-between"><div class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-outline"></span><span class="text-label-md font-label-md text-on-surface">Administrative Deviation Weight</span></div><span class="font-code-md text-code-md text-primary font-semibold px-2 py-0.5 bg-surface-container-lowest border border-outline-variant rounded">0.25x</span></div><input class="w-full accent-primary h-1.5 bg-surface-container-high rounded cursor-pointer" max="1.0" min="0.1" step="0.05" type="range" value="0.25"/><span class="text-label-sm font-label-sm text-on-surface-variant">Documentation typos or delayed logging</span></div></div></div><div class="mt-space-md p-2.5 rounded bg-surface-container-low border border-outline-variant/80"><div class="flex items-center gap-1 text-label-sm font-label-sm text-primary mb-1"><span class="material-symbols-outlined text-xs" data-icon="info">info</span><span class="font-semibold">Transparent Formula Specification</span></div><code class="font-code-md text-code-md text-on-surface block leading-tight mb-2">Risk Score = weighted deviations + recurrence factor + open CAPA factor + compliance trend factor (Normalized 0–100)</code><div class="text-label-sm font-label-sm text-on-surface-variant leading-tight"><strong>Influencing factors:</strong> Major / Minor / Admin deviations, repeat deviations, missed visits, wrong dosing, banned co-meds, open CAPAs, compliance trend.</div></div></section><section class="xl:col-span-12 bg-surface-container-lowest border border-outline-variant rounded p-space-lg shadow-sm flex flex-col justify-between"><div><div class="flex items-center justify-between pb-space-sm mb-space-md border-b border-outline-variant/60"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary" data-icon="storage">storage</span><h2 class="text-headline-sm font-headline-sm text-on-surface">Synthetic Data Mode</h2></div><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label-sm font-label-sm font-code-md bg-surface-container text-primary border border-outline-variant"><span class="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>Active (Hackathon Prototype)</span></div><div class="grid grid-cols-1 md:grid-cols-3 gap-space-md"><div class="p-space-sm rounded bg-surface border border-outline-variant/70 md:col-span-2 flex flex-col justify-between"><div class="flex flex-col gap-1"><div class="flex items-center justify-between"><span class="text-label-md font-label-md text-on-surface font-semibold">Synthetic Data Pipeline</span><div class="relative inline-flex items-center cursor-pointer"><div class="w-10 h-5 bg-primary rounded-full"></div><div class="absolute left-5 top-0.5 w-4 h-4 bg-surface-container-lowest rounded-full"></div></div></div><p class="text-body-sm font-body-sm text-on-surface-variant mt-1">ArcGuardAI is running with synthetic clinical trial records for the hackathon demonstration.</p></div><div class="flex items-center gap-4 mt-space-md pt-space-xs border-t border-outline-variant/60 text-body-sm"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-sm" data-icon="domain">domain</span><span class="font-code-md text-on-surface font-medium">200 Sites</span></div><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-sm" data-icon="person">person</span><span class="font-code-md text-on-surface font-medium">5,284 Patient Visits</span></div><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-sm" data-icon="check_circle">check_circle</span><span class="text-on-surface-variant">Zero missing records</span></div></div></div><div class="p-space-sm rounded bg-surface border border-outline-variant/70 flex flex-col justify-between gap-space-sm"><div class="flex flex-col gap-1"><span class="text-label-md font-label-md text-on-surface font-semibold">Demo Controls</span><p class="text-body-sm font-body-sm text-on-surface-variant">Demo configuration only. Thresholds and weights are transparent and adjustable for hackathon evaluation.</p></div><button class="h-8 px-3 rounded bg-surface-container-lowest border border-outline-variant text-primary font-label-md text-label-md hover:bg-surface-container-low transition-colors inline-flex items-center justify-center gap-1.5 shadow-sm w-full"><span class="material-symbols-outlined text-primary text-sm" data-icon="refresh">refresh</span>Reload Demo Dataset</button></div></div></div></section></div><footer class="pt-space-md pb-space-lg text-center border-t border-outline-variant/60 text-label-sm font-label-sm text-outline"><p>Hackathon prototype · Synthetic clinical trial data only</p></footer></div></main>
+<script>
+    // Lightweight inline JavaScript for micro-interactions
+    document.addEventListener('DOMContentLoaded', () => {
+      // Sliders label updates
+      const sliders = document.querySelectorAll('input[type="range"]');
+      sliders.forEach(slider => {
+        slider.addEventListener('input', (e) => {
+          const badge = e.target.parentElement.querySelector('span.font-code-md');
+          if (badge) {
+            badge.textContent = parseFloat(e.target.value).toFixed(2) + 'x';
+          }
+        });
+      });
+    });
+  </script>
+</body></html>

@@ -1,0 +1,60 @@
+test_cross_origin_write_rejected (test_api.ApiTests.test_cross_origin_write_rejected) ... 127.0.0.1 - - [15/Sep/2026 15:08:30] "POST /api/import HTTP/1.1" 403 -
+ok
+test_exports_and_static (test_api.ApiTests.test_exports_and_static) ... 127.0.0.1 - - [15/Sep/2026 15:08:30] "GET /api/export.csv HTTP/1.1" 200 -
+127.0.0.1 - - [15/Sep/2026 15:08:30] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [15/Sep/2026 15:08:30] "GET /api/missing HTTP/1.1" 404 -
+ok
+test_invalid_import_atomic (test_api.ApiTests.test_invalid_import_atomic) ... 127.0.0.1 - - [15/Sep/2026 15:08:30] "GET /api/data HTTP/1.1" 200 -
+127.0.0.1 - - [15/Sep/2026 15:08:30] "POST /api/import HTTP/1.1" 400 -
+127.0.0.1 - - [15/Sep/2026 15:08:30] "GET /api/data HTTP/1.1" 200 -
+ok
+test_missing_actor_and_malformed_schema (test_api.ApiTests.test_missing_actor_and_malformed_schema) ... 127.0.0.1 - - [15/Sep/2026 15:08:30] "POST /api/reviews HTTP/1.1" 400 -
+127.0.0.1 - - [15/Sep/2026 15:08:30] "POST /api/import HTTP/1.1" 400 -
+ok
+test_protocol_version_reuse_rejected (test_api.ApiTests.test_protocol_version_reuse_rejected) ... 127.0.0.1 - - [15/Sep/2026 15:08:30] "GET /api/protocol HTTP/1.1" 200 -
+127.0.0.1 - - [15/Sep/2026 15:08:30] "POST /api/protocol HTTP/1.1" 400 -
+ok
+test_review_capa_workflow_and_audit (test_api.ApiTests.test_review_capa_workflow_and_audit) ... 127.0.0.1 - - [15/Sep/2026 15:08:30] "GET /api/analysis HTTP/1.1" 200 -
+127.0.0.1 - - [15/Sep/2026 15:08:30] "POST /api/reviews HTTP/1.1" 200 -
+127.0.0.1 - - [15/Sep/2026 15:08:30] "GET /api/analysis HTTP/1.1" 200 -
+127.0.0.1 - - [15/Sep/2026 15:08:30] "POST /api/capas HTTP/1.1" 400 -
+127.0.0.1 - - [15/Sep/2026 15:08:30] "POST /api/capas HTTP/1.1" 200 -
+127.0.0.1 - - [15/Sep/2026 15:08:30] "GET /api/audit HTTP/1.1" 200 -
+127.0.0.1 - - [15/Sep/2026 15:08:30] "GET /api/report HTTP/1.1" 200 -
+ok
+test_stale_finding_rejected (test_api.ApiTests.test_stale_finding_rejected) ... 127.0.0.1 - - [15/Sep/2026 15:08:30] "POST /api/reviews HTTP/1.1" 400 -
+ok
+test_valid_import_and_protocol_round_trip (test_api.ApiTests.test_valid_import_and_protocol_round_trip) ... 127.0.0.1 - - [15/Sep/2026 15:08:30] "GET /api/data HTTP/1.1" 200 -
+127.0.0.1 - - [15/Sep/2026 15:08:31] "POST /api/import HTTP/1.1" 200 -
+127.0.0.1 - - [15/Sep/2026 15:08:31] "GET /api/protocol HTTP/1.1" 200 -
+127.0.0.1 - - [15/Sep/2026 15:08:31] "POST /api/protocol HTTP/1.1" 200 -
+127.0.0.1 - - [15/Sep/2026 15:08:31] "GET /api/analysis HTTP/1.1" 200 -
+127.0.0.1 - - [15/Sep/2026 15:08:31] "POST /api/protocol HTTP/1.1" 400 -
+ok
+test_bad_batch_inputs (test_engine.EngineTests.test_bad_batch_inputs) ... ok
+test_bad_protocol_inputs (test_engine.EngineTests.test_bad_protocol_inputs) ... ok
+test_burden_normalized_by_volume (test_engine.EngineTests.test_burden_normalized_by_volume) ... ok
+test_burden_uses_max_per_visit (test_engine.EngineTests.test_burden_uses_max_per_visit) ... ok
+test_clean_visit (test_engine.EngineTests.test_clean_visit) ... ok
+test_decimal_tolerance_does_not_create_rounding_deviation (test_engine.EngineTests.test_decimal_tolerance_does_not_create_rounding_deviation) ... ok
+test_dose_tolerance_inclusive (test_engine.EngineTests.test_dose_tolerance_inclusive) ... ok
+test_empty_site_no_score (test_engine.EngineTests.test_empty_site_no_score) ... ok
+test_future_visit_pending (test_engine.EngineTests.test_future_visit_pending) ... ok
+test_id_stable_and_evidence_sensitive (test_engine.EngineTests.test_id_stable_and_evidence_sensitive) ... ok
+test_inclusive_window_both_sides (test_engine.EngineTests.test_inclusive_window_both_sides) ... ok
+test_leading_signals_alone_raise_risk (test_engine.EngineTests.test_leading_signals_alone_raise_risk) ... ok
+test_medication_exact_match (test_engine.EngineTests.test_medication_exact_match) ... ok
+test_missed_only_after_window_closes (test_engine.EngineTests.test_missed_only_after_window_closes) ... ok
+test_protocol_effective_date (test_engine.EngineTests.test_protocol_effective_date) ... ok
+test_reassigned_record_requires_new_review (test_engine.EngineTests.test_reassigned_record_requires_new_review) ... ok
+test_review_does_not_erase_observed_burden (test_engine.EngineTests.test_review_does_not_erase_observed_burden) ... ok
+test_risk_monotonic_and_bounded (test_engine.EngineTests.test_risk_monotonic_and_bounded) ... ok
+test_score_maximum_and_zero_staff (test_engine.EngineTests.test_score_maximum_and_zero_staff) ... ok
+test_seed_scale_and_validation (test_engine.EngineTests.test_seed_scale_and_validation) ... ok
+test_severity_and_multiple_rules (test_engine.EngineTests.test_severity_and_multiple_rules) ... ok
+test_unknown_is_not_deviation_or_compliance (test_engine.EngineTests.test_unknown_is_not_deviation_or_compliance) ... ok
+
+----------------------------------------------------------------------
+Ran 30 tests in 1.342s
+
+OK

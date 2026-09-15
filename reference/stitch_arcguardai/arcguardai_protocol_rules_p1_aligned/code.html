@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-background" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ArcGuardAI - Protocol Rules | ARC-2026-01</title>
+<!-- Inter & JetBrains Mono Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary": "#00685f",
+            "secondary-fixed-dim": "#bec6e0",
+            "tertiary-fixed": "#cce5ff",
+            "on-secondary-container": "#5c647a",
+            "on-surface-variant": "#3d4947",
+            "on-secondary": "#ffffff",
+            "primary-fixed": "#89f5e7",
+            "tertiary-container": "#007bb9",
+            "background": "#f8f9ff",
+            "surface-bright": "#f8f9ff",
+            "surface-container-low": "#eff4ff",
+            "secondary-fixed": "#dae2fd",
+            "on-primary-fixed": "#00201d",
+            "on-tertiary-container": "#fdfcff",
+            "outline": "#6d7a77",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#93ccff",
+            "on-primary-container": "#f4fffc",
+            "on-secondary-fixed-variant": "#3f465c",
+            "on-primary": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-secondary-fixed": "#131b2e",
+            "surface": "#f8f9ff",
+            "on-error": "#ffffff",
+            "surface-container": "#e5eeff",
+            "surface-container-lowest": "#ffffff",
+            "inverse-on-surface": "#eaf1ff",
+            "surface-dim": "#cbdbf5",
+            "secondary-container": "#dae2fd",
+            "surface-container-highest": "#d3e4fe",
+            "on-surface": "#0b1c30",
+            "outline-variant": "#bcc9c6",
+            "secondary": "#565e74",
+            "inverse-surface": "#213145",
+            "on-tertiary-fixed-variant": "#004b73",
+            "on-primary-fixed-variant": "#005049",
+            "on-tertiary": "#ffffff",
+            "primary-fixed-dim": "#6bd8cb",
+            "surface-container-high": "#dce9ff",
+            "on-tertiary-fixed": "#001d31",
+            "on-background": "#0b1c30",
+            "surface-tint": "#006a61",
+            "error": "#ba1a1a",
+            "surface-variant": "#d3e4fe",
+            "primary-container": "#008378",
+            "tertiary": "#006194",
+            "inverse-primary": "#6bd8cb"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-lg": "1rem",
+            "margin-compact": "1rem",
+            "gutter-dense": "0.75rem",
+            "space-sm": "0.5rem",
+            "gutter": "1rem",
+            "space-2xl": "2rem",
+            "space-xs": "0.25rem",
+            "margin": "1.5rem",
+            "space-xl": "1.5rem",
+            "space-md": "0.75rem"
+          },
+          "fontFamily": {
+            "headline-md": ["Inter"],
+            "headline-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "title-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-sm": ["Inter"],
+            "label-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "label-md": ["Inter"],
+            "label-sm": ["Inter"],
+            "code-md": ["JetBrains Mono"],
+            "display-lg": ["Inter"]
+          },
+          "fontSize": {
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "title-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "600" }],
+            "body-lg": ["15px", { "lineHeight": "22px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+            "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "label-md": ["11px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+            "code-md": ["12px", { "lineHeight": "16px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "display-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      vertical-align: middle;
+      display: inline-block;
+      line-height: 1;
+    }
+    /* Custom scrollbar for clinical table and inspector drawer */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="h-full text-on-surface antialiased bg-background flex flex-col overflow-hidden">
+<!-- ========================================================================= -->
+<!-- 1. LEFT DOCKED SIDEBAR (Shared Component: SideNavBar)                      -->
+<!-- ========================================================================= -->
+<aside class="fixed top-0 left-0 h-screen w-60 bg-surface-container-lowest dark:bg-inverse-surface border-r border-outline-variant dark:border-outline flex flex-col justify-between p-gutter-dense z-30 select-none">
+<!-- Header / Brand -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2 px-2 py-1">
+<!-- Shield Clinical Logo Badge -->
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary shadow-sm">
+<span class="material-symbols-outlined text-lg" data-icon="shield">shield</span>
+</div>
+<div class="flex flex-col">
+<span class="text-title-md font-title-md font-semibold text-primary dark:text-inverse-primary tracking-tight">ArcGuardAI</span>
+<span class="text-label-sm font-label-sm text-secondary">Clinical Risk Engine</span>
+</div>
+</div>
+<!-- Protocol Compliance Status Pill -->
+<div class="mx-2 px-2 py-1 bg-surface-container-low rounded flex items-center justify-between border border-outline-variant/60"><span class="text-[11px] font-medium text-secondary">Synthetic Demo · 200 Sites</span><span class="w-2 h-2 rounded-full bg-emerald-600"></span></div>
+<!-- Navigation Tabs List -->
+<nav class="mt-2 flex flex-col gap-0.5">
+<!-- 1. Overview -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant dark:text-surface-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-medium hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors rounded text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="dashboard">dashboard</span>
+<span class="flex-1">Overview</span>
+</a>
+<!-- 2. Site Risk Monitor -->
+<a class="flex items-center justify-between px-3 py-2 text-on-surface-variant dark:text-surface-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-medium hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors rounded text-body-sm font-body-sm" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="clinical_notes">clinical_notes</span>
+<span>Site Risk Monitor</span>
+</div>
+<span class="px-1.5 py-0.5 text-[10px] font-bold rounded bg-error/10 text-error border border-error/20">4 High</span>
+</a>
+<!-- 3. Protocol Deviations -->
+<a class="flex items-center justify-between px-3 py-2 text-on-surface-variant dark:text-surface-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-medium hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors rounded text-body-sm font-body-sm" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="warning">warning</span>
+<span>Protocol Deviations</span>
+</div>
+<span class="px-1.5 py-0.5 text-[10px] font-bold rounded bg-amber-500/10 text-amber-700 border border-amber-500/20">18 Major</span>
+</a>
+<!-- 4. Participant Review -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant dark:text-surface-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-medium hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors rounded text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="group">group</span>
+<span class="flex-1">Participant Review</span>
+</a>
+<!-- 5. CAPA Management -->
+<a class="flex items-center justify-between px-3 py-2 text-on-surface-variant dark:text-surface-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-medium hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors rounded text-body-sm font-body-sm" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span>CAPA Management</span>
+</div>
+<span class="px-1.5 py-0.5 text-[10px] font-medium rounded bg-secondary-container text-on-secondary-fixed">12 Open</span>
+</a>
+<!-- 6. Reports -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant dark:text-surface-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-medium hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors rounded text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="analytics">analytics</span>
+<span class="flex-1">Reports</span>
+</a>
+<!-- 7. Protocol Rules (ACTIVE) -->
+<a class="flex items-center gap-2 px-3 py-2 bg-surface-container-low dark:bg-surface-container text-primary dark:text-inverse-primary border-l-2 border-primary dark:border-inverse-primary font-semibold text-body-sm font-body-sm rounded-r" href="#">
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="policy">policy</span>
+<span class="flex-1">Protocol Rules</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+</a>
+<!-- 8. Settings -->
+<a class="flex items-center gap-2 px-3 py-2 text-on-surface-variant dark:text-surface-dim hover:text-on-surface dark:hover:text-inverse-on-surface font-medium hover:bg-surface-container-low dark:hover:bg-surface-container transition-colors rounded text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="settings">settings</span>
+<span class="flex-1">Settings</span>
+</a>
+</nav>
+</div>
+<!-- Footer System Status -->
+<div class="pt-3 border-t border-outline-variant/60 flex flex-col gap-2"><div class="flex items-center justify-between px-2 text-label-sm font-label-sm text-secondary"><span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-primary" data-icon="check_circle">check_circle</span>Status: Active</span><span class="text-[10px] font-code-md text-slate-500">200 Sites</span></div><div class="px-2 py-1.5 bg-surface-container/50 rounded flex items-center justify-between text-[11px] font-code-md text-on-surface-variant"><span>Dataset</span><span class="font-semibold text-primary">Synthetic Clinical Data</span></div></div>
+</aside>
+<!-- ========================================================================= -->
+<!-- 2. TOP FIXED NAVBAR (Shared Component: TopNavBar)                         -->
+<!-- ========================================================================= -->
+<header class="fixed top-0 right-0 left-60 h-14 bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant dark:border-outline flex items-center justify-between px-space-lg z-20">
+<!-- Left: Study Switcher & Query Search -->
+<div class="flex items-center gap-4">
+<!-- Active Study Selector Trigger -->
+<button class="flex items-center gap-2.5 px-2.5 py-1.5 rounded border border-outline-variant/80 hover:border-primary transition-colors bg-white text-left">
+<span class="px-1.5 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-code-md font-bold uppercase tracking-wide">STUDY</span>
+<span class="text-title-md font-title-md font-semibold text-on-surface">ARC-2026-01 | Phase III Cardiology | 200 Sites</span>
+<span class="material-symbols-outlined text-slate-400 text-[18px]" data-icon="expand_more">expand_more</span>
+</button>
+<!-- Global Filter/Search Input -->
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-slate-400 text-[16px]" data-icon="search">search</span>
+<input class="w-full pl-8 pr-9 py-1 bg-surface-bright border border-outline-variant/70 rounded text-body-sm font-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-on-surface placeholder:text-slate-400" placeholder="Search rules, IDs, markers..." type="text"/>
+<kbd class="absolute right-2 top-1.5 px-1 py-0.5 text-[9px] font-code-md rounded border border-outline-variant/60 bg-white text-slate-400">Ctrl+K</kbd>
+</div>
+</div>
+<!-- Right: Validation Badge, Actions & Profile -->
+<div class="flex items-center gap-3"><div class="flex items-center gap-1.5 px-2.5 py-1 bg-teal-50/70 text-primary border border-teal-200/80 rounded text-label-md font-label-md font-medium"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span><span>Prototype Rule Engine</span></div><div class="h-5 w-[1px] bg-outline-variant/60 mx-1"></div><button class="h-8 px-3 rounded bg-primary hover:bg-primary-container text-white text-label-lg font-label-lg flex items-center gap-1.5 shadow-sm transition-colors"><span class="material-symbols-outlined text-[16px]" data-icon="add">add</span><span>New CAPA</span></button><div class="flex items-center gap-1 text-on-surface-variant"><button class="relative p-1.5 rounded hover:bg-surface-container-low transition-colors" title="Notifications"><span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span><span class="absolute top-1 right-1 w-4 h-4 bg-error text-white rounded-full text-[9px] font-bold flex items-center justify-center">3</span></button><button class="p-1.5 rounded hover:bg-surface-container-low transition-colors" title="Documentation &amp; Help"><span class="material-symbols-outlined text-[20px]" data-icon="help">help</span></button></div><div class="flex items-center gap-2 pl-2 border-l border-outline-variant/60"><div class="w-7 h-7 rounded-full bg-primary/20 text-primary font-semibold flex items-center justify-center text-xs font-code-md border border-primary/30">RR</div><div class="flex flex-col text-left"><span class="text-label-md font-label-md leading-none text-on-surface">Dr. R. Reynolds</span><span class="text-[10px] text-secondary leading-tight">Lead ClinOps Monitor</span></div></div></div>
+</header>
+<!-- ========================================================================= -->
+<!-- 3. MAIN WORKSPACE CANVAS + RIGHT INSPECTION DRAWER                        -->
+<!-- ========================================================================= -->
+<div class="mt-14 ml-60 flex-1 flex overflow-hidden">
+<!-- LEFT/CENTER SCROLLABLE CANVAS -->
+<main class="flex-1 overflow-y-auto p-space-xl space-y-4 pb-12">
+<!-- Breadcrumbs & Header Section -->
+<div class="flex flex-col gap-1">
+<nav class="flex items-center gap-1.5 text-label-sm font-label-sm text-secondary">
+<span>Studies</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+<span>ARC-2026-01</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary font-semibold">Protocol Rules</span>
+</nav>
+<div class="flex items-center justify-between mt-1">
+<div>
+<h1 class="text-headline-lg font-headline-lg text-on-surface">Protocol Rules</h1>
+<p class="text-body-md font-body-md text-secondary mt-0.5">
+              Review the machine-readable clinical protocol rules used for automated deviation detection.
+            </p>
+</div>
+<!-- Header Utility Actions -->
+<div class="flex items-center gap-2"><div class="px-3 py-1 rounded bg-slate-100 border border-slate-200 text-secondary text-body-sm font-medium flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-primary" data-icon="rule">rule</span><span>Machine-Readable Protocol Rules</span></div><button class="h-8 px-3 rounded border border-outline-variant bg-white text-on-surface hover:bg-slate-50 text-label-lg font-label-lg flex items-center gap-1.5 transition-colors shadow-sm"><span class="material-symbols-outlined text-[16px] text-secondary" data-icon="file_download">file_download</span><span>Export Rulebook (JSON/CSV)</span></button></div>
+</div>
+</div>
+<!-- Protocol Specification Metadata Card / Banner -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-3.5 shadow-sm"><div class="grid grid-cols-4 gap-4 text-left divide-x divide-outline-variant/60"><div class="px-3 first:pl-0"><div class="text-label-sm font-label-sm text-secondary uppercase font-semibold">Protocol Version</div><div class="text-title-md font-title-md text-on-surface mt-0.5 flex items-center gap-1.5"><span class="font-code-md font-semibold">v3.2</span></div><div class="text-[11px] text-secondary">Approved Protocol</div></div><div class="px-3"><div class="text-label-sm font-label-sm text-secondary uppercase font-semibold">Effective Date</div><div class="text-title-md font-title-md text-on-surface mt-0.5 font-code-md font-semibold">01 Sep 2026</div><div class="text-[11px] text-secondary">Active Trial Window</div></div><div class="px-3"><div class="text-label-sm font-label-sm text-secondary uppercase font-semibold">Active Rules</div><div class="text-title-md font-title-md text-emerald-700 mt-0.5 font-code-md font-semibold">26 Active</div><div class="text-[11px] text-secondary">Automated Deviation Detection</div></div><div class="px-3"><div class="text-label-sm font-label-sm text-secondary uppercase font-semibold">Disabled Rules</div><div class="text-title-md font-title-md text-slate-700 mt-0.5 font-code-md font-semibold">2 Suspended</div><div class="text-[11px] text-secondary">Pending Protocol Amendment</div></div></div></div>
+<!-- Top Metric KPI Cards: Rule Categories Breakdown -->
+<div class="grid grid-cols-5 gap-3"><div class="bg-surface-container-lowest border border-outline-variant p-3 rounded-lg shadow-sm hover:border-slate-400 transition-colors"><div class="flex items-center justify-between text-secondary"><span class="text-label-sm font-label-sm uppercase font-semibold">Visit Windows</span><span class="material-symbols-outlined text-primary text-[18px]" data-icon="calendar_today">calendar_today</span></div><div class="text-headline-md font-headline-md font-code-md text-on-surface mt-1">6 Rules</div><div class="text-[11px] text-secondary mt-1">Example: Day 28 ±3 days</div></div><div class="bg-surface-container-lowest border border-outline-variant p-3 rounded-lg shadow-sm hover:border-slate-400 transition-colors"><div class="flex items-center justify-between text-secondary"><span class="text-label-sm font-label-sm uppercase font-semibold">Dose Compliance</span><span class="material-symbols-outlined text-error text-[18px]" data-icon="medication">medication</span></div><div class="text-headline-md font-headline-md font-code-md text-on-surface mt-1">4 Rules</div><div class="text-[11px] text-error font-medium mt-1">Major if outside allowed range</div></div><div class="bg-surface-container-lowest border border-outline-variant p-3 rounded-lg shadow-sm hover:border-slate-400 transition-colors"><div class="flex items-center justify-between text-secondary"><span class="text-label-sm font-label-sm uppercase font-semibold">Prohibited Meds</span><span class="material-symbols-outlined text-amber-600 text-[18px]" data-icon="block">block</span></div><div class="text-headline-md font-headline-md font-code-md text-on-surface mt-1">8 Items</div><div class="text-[11px] text-amber-700 font-medium mt-1">Major if detected</div></div><div class="bg-surface-container-lowest border border-outline-variant p-3 rounded-lg shadow-sm hover:border-slate-400 transition-colors"><div class="flex items-center justify-between text-secondary"><span class="text-label-sm font-label-sm uppercase font-semibold">Required Tests</span><span class="material-symbols-outlined text-blue-600 text-[18px]" data-icon="medical_services">medical_services</span></div><div class="text-headline-md font-headline-md font-code-md text-on-surface mt-1">7 Rules</div><div class="text-[11px] text-secondary mt-1">Minor if missing</div></div><div class="bg-surface-container-lowest border border-outline-variant p-3 rounded-lg shadow-sm hover:border-slate-400 transition-colors"><div class="flex items-center justify-between text-secondary"><span class="text-label-sm font-label-sm uppercase font-semibold">Documentation</span><span class="material-symbols-outlined text-slate-500 text-[18px]" data-icon="description">description</span></div><div class="text-headline-md font-headline-md font-code-md text-on-surface mt-1">3 Rules</div><div class="text-[11px] text-secondary mt-1">Administrative</div></div></div>
+<!-- Filter & Search Toolbar -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-2.5 shadow-sm flex items-center justify-between gap-3"><div class="flex items-center gap-2 w-full"><div class="relative flex-1"><span class="material-symbols-outlined absolute left-2.5 top-2 text-slate-400 text-[16px]" data-icon="search">search</span><input class="w-full pl-8 pr-12 py-1 bg-white border border-outline-variant rounded text-body-sm font-body-sm focus:outline-none focus:border-primary" placeholder="Search rules, parameters, medications... (Ctrl+K)" type="text"/><kbd class="absolute right-2 top-1.5 px-1 py-0.5 text-[9px] font-code-md rounded border border-outline-variant/60 bg-slate-50 text-slate-400">Ctrl+K</kbd></div><select class="py-1 px-2.5 bg-white border border-outline-variant rounded text-body-sm font-body-sm text-on-surface focus:outline-none focus:border-primary"><option>All Categories (5)</option><option>Visit Windows</option><option>Dose Compliance</option><option>Prohibited Meds</option><option>Required Tests</option><option>Documentation</option></select><select class="py-1 px-2.5 bg-white border border-outline-variant rounded text-body-sm font-body-sm text-on-surface focus:outline-none focus:border-primary"><option>All Severities</option><option>Major</option><option>Minor</option><option>Administrative</option></select><select class="py-1 px-2.5 bg-white border border-outline-variant rounded text-body-sm font-body-sm text-on-surface focus:outline-none focus:border-primary"><option>All Statuses</option><option>Active (26)</option><option>Suspended (2)</option></select></div></div>
+<!-- Main Operational Data Table (Machine-Readable Rules Table) -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg shadow-sm overflow-hidden">
+<table class="w-full border-collapse text-left"><thead><tr class="bg-slate-50 border-b border-outline-variant text-[11px] font-label-md text-secondary uppercase tracking-wider"><th class="py-2.5 px-3 w-32">Rule ID</th><th class="py-2.5 px-3 w-40">Category</th><th class="py-2.5 px-3">Rule</th><th class="py-2.5 px-3 w-56">Threshold</th><th class="py-2.5 px-3 w-28">Severity</th><th class="py-2.5 px-3 w-24">Status</th><th class="py-2.5 px-3 w-20 text-right">View</th></tr></thead><tbody class="divide-y divide-outline-variant/60 text-body-sm font-body-sm"><tr class="bg-teal-50/50 border-l-2 border-primary hover:bg-teal-50/80 transition-colors cursor-pointer"><td class="py-2.5 px-3 font-code-md text-primary font-bold">PR-DOSE-001</td><td class="py-2.5 px-3"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-100 text-slate-800 text-[11px] font-medium border border-slate-200"><span class="material-symbols-outlined text-[13px] text-primary" data-icon="medication">medication</span>Dose Compliance</span></td><td class="py-2.5 px-3"><div class="font-semibold text-on-surface">Allowed dose range</div><div class="text-[11px] text-secondary">Investigational product dose tolerance</div></td><td class="py-2.5 px-3 font-code-md text-xs text-slate-900">45–55 mg</td><td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-red-50 text-red-700 border border-red-200 inline-flex items-center gap-1"><span class="material-symbols-outlined text-[12px]" data-icon="error">error</span>Major</span></td><td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">Active</span></td><td class="py-2.5 px-3 text-right"><button class="px-2 py-0.5 rounded bg-primary text-white text-[11px] font-medium hover:bg-primary-container transition-colors">Selected</button></td></tr><tr class="hover:bg-slate-50 transition-colors cursor-pointer"><td class="py-2.5 px-3 font-code-md text-slate-900 font-semibold">PR-VISIT-002</td><td class="py-2.5 px-3"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-100 text-slate-800 text-[11px] font-medium border border-slate-200"><span class="material-symbols-outlined text-[13px] text-blue-600" data-icon="calendar_today">calendar_today</span>Visit Window</span></td><td class="py-2.5 px-3"><div class="font-semibold text-on-surface">Visit 2 timing</div><div class="text-[11px] text-secondary">Day 28 safety assessment window</div></td><td class="py-2.5 px-3 font-code-md text-xs text-slate-900">Day 28 ±3 days</td><td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 inline-flex items-center gap-1"><span class="material-symbols-outlined text-[12px]" data-icon="warning">warning</span>Minor</span></td><td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">Active</span></td><td class="py-2.5 px-3 text-right"><button class="p-1 rounded hover:bg-slate-100 text-secondary transition-colors" title="View Rule"><span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span></button></td></tr><tr class="hover:bg-slate-50 transition-colors cursor-pointer"><td class="py-2.5 px-3 font-code-md text-slate-900 font-semibold">PR-MED-003</td><td class="py-2.5 px-3"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-100 text-slate-800 text-[11px] font-medium border border-slate-200"><span class="material-symbols-outlined text-[13px] text-amber-600" data-icon="block">block</span>Prohibited Medication</span></td><td class="py-2.5 px-3"><div class="font-semibold text-on-surface">Banned co-medication</div><div class="text-[11px] text-secondary">Prohibited anticoagulant dispensing</div></td><td class="py-2.5 px-3 font-code-md text-xs text-red-700">Warfarin, Drug-X, Dabigatran</td><td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-red-50 text-red-700 border border-red-200 inline-flex items-center gap-1"><span class="material-symbols-outlined text-[12px]" data-icon="error">error</span>Major</span></td><td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">Active</span></td><td class="py-2.5 px-3 text-right"><button class="p-1 rounded hover:bg-slate-100 text-secondary transition-colors" title="View Rule"><span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span></button></td></tr><tr class="hover:bg-slate-50 transition-colors cursor-pointer"><td class="py-2.5 px-3 font-code-md text-slate-900 font-semibold">PR-ASSESS-004</td><td class="py-2.5 px-3"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-100 text-slate-800 text-[11px] font-medium border border-slate-200"><span class="material-symbols-outlined text-[13px] text-blue-600" data-icon="medical_services">medical_services</span>Required Assessment</span></td><td class="py-2.5 px-3"><div class="font-semibold text-on-surface">Required ECG</div><div class="text-[11px] text-secondary">Mandatory 12-lead ECG at visits 2, 3, 5</div></td><td class="py-2.5 px-3 font-code-md text-xs text-slate-900">Missing required assessment</td><td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 inline-flex items-center gap-1"><span class="material-symbols-outlined text-[12px]" data-icon="warning">warning</span>Minor</span></td><td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">Active</span></td><td class="py-2.5 px-3 text-right"><button class="p-1 rounded hover:bg-slate-100 text-secondary transition-colors" title="View Rule"><span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span></button></td></tr><tr class="hover:bg-slate-50 transition-colors cursor-pointer"><td class="py-2.5 px-3 font-code-md text-slate-900 font-semibold">PR-DOC-006</td><td class="py-2.5 px-3"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-100 text-slate-800 text-[11px] font-medium border border-slate-200"><span class="material-symbols-outlined text-[13px] text-slate-500" data-icon="description">description</span>Documentation</span></td><td class="py-2.5 px-3"><div class="font-semibold text-on-surface">Missing timestamp</div><div class="text-[11px] text-secondary">eCRF signature timestamp audit</div></td><td class="py-2.5 px-3 font-code-md text-xs text-slate-900">Missing required timestamp &gt;24h</td><td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-300 inline-flex items-center gap-1"><span class="material-symbols-outlined text-[12px]" data-icon="info">info</span>Administrative</span></td><td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-800 border border-emerald-200">Active</span></td><td class="py-2.5 px-3 text-right"><button class="p-1 rounded hover:bg-slate-100 text-secondary transition-colors" title="View Rule"><span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span></button></td></tr><tr class="hover:bg-slate-50 opacity-70 transition-colors cursor-pointer bg-slate-50/40"><td class="py-2.5 px-3 font-code-md text-slate-700 font-semibold line-through">PR-DOSE-007</td><td class="py-2.5 px-3"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[11px] font-medium border border-slate-200"><span class="material-symbols-outlined text-[13px] text-slate-500" data-icon="medication">medication</span>Dose Compliance</span></td><td class="py-2.5 px-3"><div class="font-semibold text-slate-700">Cohort C Escalation</div><div class="text-[11px] text-amber-700 font-medium">Suspended pending amendment</div></td><td class="py-2.5 px-3 font-code-md text-xs text-slate-600">90.0–110.0 mg</td><td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-100 text-slate-500 border border-slate-300">Major</span></td><td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[11px] font-medium bg-slate-200 text-slate-700">Suspended</span></td><td class="py-2.5 px-3 text-right"><button class="p-1 rounded hover:bg-slate-100 text-secondary transition-colors" title="View Rule"><span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span></button></td></tr></tbody></table>
+<!-- Table Pagination Bar -->
+<div class="px-3 py-2 bg-slate-50 border-t border-outline-variant flex items-center justify-between text-[11px] text-secondary"><div>Showing <span class="font-semibold text-on-surface">1 - 6</span> of <span class="font-semibold text-on-surface">28</span> machine-readable protocol rules</div><div class="flex items-center gap-1 font-code-md"><button class="px-2 py-1 rounded border border-outline-variant bg-white hover:bg-slate-100 disabled:opacity-50" disabled="">PREV</button><button class="px-2 py-1 rounded bg-primary text-white font-bold">1</button><button class="px-2 py-1 rounded border border-outline-variant bg-white hover:bg-slate-100">2</button><button class="px-2 py-1 rounded border border-outline-variant bg-white hover:bg-slate-100">3</button><button class="px-2 py-1 rounded border border-outline-variant bg-white hover:bg-slate-100">NEXT</button></div></div>
+</div>
+<!-- Regulatory Compliance Verification Footer Bar -->
+<footer class="pt-2 text-center text-[11px] text-slate-500 font-code-md">Hackathon prototype · Synthetic clinical trial data only</footer>
+</main>
+<!-- ========================================================================= -->
+<!-- 4. RIGHT AUDIT & EVALUATION DRAWER (PR-DOSE-001 SELECTED)                -->
+<!-- ========================================================================= -->
+<aside class="w-[440px] bg-white border-l border-outline-variant flex flex-col justify-between shadow-xl z-10 flex-shrink-0">
+<!-- Drawer Header -->
+<div class="p-4 border-b border-outline-variant bg-slate-50"><div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="px-2 py-0.5 rounded font-code-md font-bold text-xs bg-primary/10 text-primary border border-primary/20">PR-DOSE-001</span><span class="px-2 py-0.5 rounded font-bold text-[10px] bg-red-100 text-red-800 border border-red-200">Major</span></div><div class="flex items-center gap-2"><span class="px-2 py-0.5 rounded font-medium text-[11px] bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>Active</span><button class="p-1 rounded hover:bg-slate-200 text-secondary" title="Close Drawer"><span class="material-symbols-outlined text-[18px]" data-icon="close">close</span></button></div></div><h2 class="text-title-md font-title-md font-semibold text-on-surface mt-2">Investigational Product Dose Tolerance</h2><div class="text-body-sm text-secondary mt-1">Participant dose must remain between 45 mg and 55 mg.</div><div class="text-[11px] text-secondary mt-1">Category: <strong class="text-on-surface font-medium">Dose Compliance</strong> · Subprotocol: <strong class="text-on-surface font-medium">Cardio IP-109</strong></div></div>
+<!-- Drawer Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-4 space-y-4 text-body-sm font-body-sm"><div class="space-y-2"><div class="flex items-center justify-between"><span class="text-label-md font-label-md uppercase text-secondary font-bold tracking-wider">How It Works</span><span class="text-[10px] font-code-md text-primary font-semibold">Deterministic Logic</span></div><div class="p-3 bg-slate-50 border border-slate-200 rounded text-slate-800 text-body-sm leading-relaxed">ArcGuardAI compares the observed dose in the participant record with the protocol-defined minimum and maximum.</div><div class="p-3 bg-slate-900 text-slate-100 rounded font-code-md text-[11px] leading-relaxed border border-slate-800"><span class="text-amber-400 font-bold">IF</span> observed_dose &lt; 45 <span class="text-amber-400 font-bold">OR</span> observed_dose &gt; 55<br/><span class="text-amber-400 font-bold">THEN</span> deviation = <span class="text-emerald-400">'Major'</span></div><div class="p-2.5 bg-slate-50 border border-slate-200 rounded text-[11px] flex items-center justify-between"><span class="text-secondary">Data Source</span><span class="font-medium text-on-surface">Synthetic participant records</span></div></div><div class="space-y-2 pt-2 border-t border-outline-variant/60"><span class="text-label-md font-label-md uppercase text-secondary font-bold tracking-wider">Allowed Dose Thresholds</span><div class="grid grid-cols-3 gap-2"><div class="p-2 bg-slate-50 rounded border border-outline-variant/60 text-center"><div class="text-[10px] text-secondary uppercase font-semibold">Minimum</div><div class="font-code-md font-bold text-on-surface text-sm mt-0.5">45 mg</div></div><div class="p-2 bg-emerald-50/60 rounded border border-emerald-200 text-center"><div class="text-[10px] text-emerald-800 uppercase font-semibold">Target</div><div class="font-code-md font-bold text-emerald-800 text-sm mt-0.5">50 mg</div></div><div class="p-2 bg-slate-50 rounded border border-outline-variant/60 text-center"><div class="text-[10px] text-secondary uppercase font-semibold">Maximum</div><div class="font-code-md font-bold text-on-surface text-sm mt-0.5">55 mg</div></div></div></div><div class="space-y-2 pt-2 border-t border-outline-variant/60"><div class="flex items-center justify-between"><span class="text-label-md font-label-md uppercase text-secondary font-bold tracking-wider">Related Deviations</span><span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 text-[10px] font-bold font-code-md">18 Triggered</span></div><div class="space-y-2 text-xs"><div class="p-2.5 bg-slate-50 border border-outline-variant/70 rounded hover:border-slate-400 transition-colors"><div class="flex items-center justify-between"><span class="font-code-md font-semibold text-primary">DEV-001 · PT-002 · SITE-101</span><span class="px-1.5 py-0.2 rounded font-bold text-[10px] bg-red-100 text-red-800">Major</span></div><div class="grid grid-cols-2 gap-1 text-[11px] mt-2 pt-1 border-t border-slate-200"><div class="text-secondary">Expected: <strong class="text-on-surface font-code-md">45–55 mg</strong></div><div class="text-secondary text-right">Observed: <strong class="text-error font-code-md">75 mg</strong></div></div><div class="mt-1 text-[10px] text-secondary">Administered dosage exceeded upper threshold by 20 mg.</div></div></div></div></div>
+<!-- Drawer Footer Action Bar -->
+<div class="p-3 border-t border-outline-variant bg-slate-50 flex flex-col gap-2"><div class="flex flex-col gap-2"><button class="w-full h-8 px-3 rounded bg-primary hover:bg-primary-container text-white text-label-lg font-label-lg flex items-center justify-center gap-1.5 transition-colors shadow-sm"><span class="material-symbols-outlined text-[16px]" data-icon="warning">warning</span><span>View Related Deviations (18)</span></button><button class="w-full h-8 px-3 rounded border border-outline-variant bg-white text-on-surface hover:bg-slate-100 text-label-md font-label-md flex items-center justify-center gap-1 transition-colors"><span class="material-symbols-outlined text-[15px] text-secondary" data-icon="visibility">visibility</span><span>View Rule Details</span></button></div></div>
+</aside>
+</div>
+</body></html>

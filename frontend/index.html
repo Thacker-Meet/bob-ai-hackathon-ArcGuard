@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ArcGuardAI · Clinical Trial Monitor</title>
+  <meta name="description" content="ArcGuardAI helps clinical trial teams spot protocol issues early, manage corrective actions, and stay compliant — without needing a technical background.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- ── Sidebar navigation ── -->
+  <aside class="sidebar" aria-label="Sidebar">
+    <a class="brand" href="#overview" aria-label="ArcGuardAI Home">
+      <img class="brand-logo" src="/assets/arcguard-logo.png" alt="ArcGuardAI" width="200" height="52">
+    </a>
+    <nav id="nav" aria-label="Main navigation"></nav>
+  </aside>
+
+  <!-- ── Main workspace ── -->
+  <div class="workspace">
+    <header class="topbar">
+      <div>
+        <strong class="mono">ARC-2026-01</strong>
+        <span class="divider"></span>
+        <span>Phase III Cardiology Study</span>
+        <span class="divider"></span>
+        <span id="site-count" class="mono muted"></span>
+      </div>
+      <div class="profile">
+        <span>
+          <strong>Local Reviewer</strong>
+          <small>Clinical Operations Team</small>
+        </span>
+        <span class="avatar" aria-hidden="true">LR</span>
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <div class="loading">
+        <div style="font-size:32px;margin-bottom:12px">⏳</div>
+        Loading trial data…
+      </div>
+    </main>
+
+    <footer>
+      ArcGuardAI · Clinical Trial Risk Monitor
+    </footer>
+  </div>
+
+  <!-- ── Global UI overlays ── -->
+  <div id="toast" role="status" aria-live="polite"></div>
+  <dialog id="dialog" aria-labelledby="dialog-title"></dialog>
+</body>
+</html>
