@@ -1,0 +1,12 @@
+https://youtu.be/arcguard-ai-clinical-trial-demo
+
+ArcGuardAI Clinical Trial Risk Intelligence Demo Video.
+
+Video overview:
+  - System architecture and synthetic study data pipeline
+  - Protocol rules configuration and dynamic evaluation engine
+  - Multi-dimensional Site Risk Monitor with leading indicators
+  - Protocol Deviations review and source verification workflow
+  - Participant Review with longitudinal timeline and domain adherence
+  - End-to-end CAPA Quality Management (List and Kanban boards)
+  - GCP regulatory inspection package export and audit trail

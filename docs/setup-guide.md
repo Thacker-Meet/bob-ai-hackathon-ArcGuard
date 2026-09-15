@@ -1,49 +1,80 @@
-# Setup guide
+# Setup and Installation Guide
 
-## What it does
+## Prerequisites
 
-- Explains how to run ArcGuard locally with MongoDB.
-- Provides the single administrator login used by local mode.
+Before setting up ArcGuardAI, ensure you have the following installed on your machine:
 
-## Input
+- **Python 3.11** or newer
+- **MongoDB** Community Server running locally on default port (`mongodb://localhost:27017`)
+- **Web Browser** (Chrome, Firefox, Safari, or Edge)
+- **Git**
 
-- Python 3.11 or newer.
-- A local MongoDB server at `mongodb://localhost:27017`.
-- The repository files and bundled `.vendor` dependency folder.
+---
 
-## Output
+## Quick Start (Step-by-Step)
 
-- ArcGuard at `http://127.0.0.1:8000/`.
-- A seeded `arcguard` MongoDB database with sample study data and one administrator account.
-
-## Where used
-
-- Local development, review, and test setup.
-
-## By whom
-
-- Developers, QA reviewers, and evaluators.
-
-## How to test
-
-```powershell
-cd D:\IBM-HACKATHON\bob-ai-hackathon-ArcGuard
-python -m backend.server --port 8000
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Thacker-Meet/bob-ai-hackathon-ArcGuard.git
+cd bob-ai-hackathon-ArcGuard
 ```
 
-Open the URL and sign in with:
+### 2. Set Up Virtual Environment (Optional but Recommended)
+```bash
+# On Windows
+python -m venv venv
+.\venv\Scripts\activate
 
-- Email: `admin@arcguard.local`
-- Password: `admin-password-123`
+# On Linux / macOS
+python3 -m venv venv
+source venv/bin/activate
+```
 
-Run the automated checks in another terminal:
+### 3. Install Python Dependencies
+```bash
+pip install pymongo
+```
 
-```powershell
+### 4. Ensure MongoDB is Running
+```bash
+# Verify MongoDB is accessible locally:
+# On Linux / macOS:
+mongosh --eval "db.adminCommand('ping')"
+
+# On Windows:
+# Ensure the MongoDB Windows Service is started
+```
+
+### 5. Launch the ArcGuardAI Application
+```bash
+# Option A (from repository root):
+python -m backend.server --port 8000
+
+# Option B (using src launcher):
+python -m src.main --port 8000
+```
+
+### 6. Access the Application
+Open your browser and navigate to:
+**http://127.0.0.1:8000**
+
+---
+
+## Default Login Credentials
+
+ArcGuardAI initializes with a local administrator account on first startup:
+
+- **Email**: `admin@arcguard.local`
+- **Password**: `admin-password-123`
+
+---
+
+## Running Automated Tests
+
+ArcGuardAI includes a comprehensive test suite covering protocol validation, deviation detection, site risk composite scoring, and authenticated API endpoints:
+
+```bash
 python -m unittest discover -s tests -v
 ```
 
-## Known limits
-
-- MongoDB must be running locally.
-- There is no registration, password reset, or second account.
-- The seeded study data is synthetic and must not be used for clinical decisions.
+All test cases run in an isolated test database (`arcguard_test`) to preserve application state.

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d9488">
+  <title>ArcGuardAI | Clinical Trial Risk Intelligence</title>
+  <meta name="description" content="ArcGuardAI helps clinical trial teams spot protocol issues early, manage corrective actions, and stay compliant — without needing a technical background.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- ── Sidebar navigation ── -->
+  <aside class="sidebar" aria-label="Sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark"><span class="material-symbols-outlined" aria-hidden="true">health_and_safety</span></div>
+      <div class="brand-text">
+        <strong>ArcGuardAI</strong>
+        <small>Clinical Risk Engine</small>
+      </div>
+    </div>
+    <nav id="nav" aria-label="Main navigation"></nav>
+    <div class="sidebar-foot">
+      <div class="sidebar-status">
+        <span class="live-dot"></span>
+        <span id="sidebar-sites" class="mono">200 Sites Monitored</span>
+      </div>
+      <div class="sidebar-env">
+        <span class="material-symbols-outlined" aria-hidden="true">science</span>
+        <span>Synthetic Demo Environment</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main workspace ── -->
+  <div class="workspace">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-context">
+          <span class="live-dot"></span>
+          <span class="mono topbar-study" id="topbar-study">ARC-2026-01</span>
+          <span class="topbar-sep">|</span>
+          <span>Phase III Global Cardiology</span>
+          <span class="topbar-sep">|</span>
+          <span id="site-count" class="mono"></span>
+        </div>
+        <div class="topbar-search" id="topbar-search-container">
+          <span class="material-symbols-outlined search-icon" aria-hidden="true">search</span>
+          <input type="text" id="cmd-search" placeholder="Quick search (Ctrl+K)..." aria-label="Quick search">
+          <kbd>Ctrl+K</kbd>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-freshness" id="freshness">
+          <span class="live-dot"></span>
+          <span id="freshness-text">Analysis Current</span>
+        </div>
+        <div class="topbar-sep-v"></div>
+        <div class="profile">
+          <span>
+            <strong>Dr. R. Reynolds</strong>
+            <small>Lead ClinOps</small>
+          </span>
+          <span class="avatar" aria-hidden="true">RR</span>
+        </div>
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <!-- Skeleton loading state -->
+      <div class="loading-skeleton">
+        <div class="skeleton-header">
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-subtitle"></div>
+        </div>
+        <div class="skeleton-cards">
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+        <div class="skeleton skeleton-table"></div>
+      </div>
+    </main>
+
+    <footer>
+      <span class="material-symbols-outlined" aria-hidden="true" style="font-size:14px;vertical-align:middle;margin-right:4px">science</span>
+      Hackathon prototype · Synthetic clinical trial data only
+    </footer>
+  </div>
+
+  <!-- ── Quick search overlay ── -->
+  <div id="search-overlay" class="search-overlay" role="search" aria-label="Quick search" hidden>
+    <div class="search-modal">
+      <div class="search-modal-header">
+        <span class="material-symbols-outlined" aria-hidden="true">search</span>
+        <input type="text" id="search-input" placeholder="Search sites, participants, deviations..." autofocus>
+        <kbd>ESC</kbd>
+      </div>
+      <div id="search-results" class="search-results"></div>
+    </div>
+  </div>
+
+  <!-- ── Global UI overlays ── -->
+  <div id="toast" role="status" aria-live="polite"></div>
+  <dialog id="dialog" aria-labelledby="dialog-title"></dialog>
+</body>
+</html>

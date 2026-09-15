@@ -1,0 +1,5 @@
+http://127.0.0.1:8000
+
+ArcGuardAI is configured for local evaluation with MongoDB.
+Follow docs/setup-guide.md to run locally:
+  python -m backend.server --port 8000
