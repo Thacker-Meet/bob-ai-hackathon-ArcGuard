@@ -13,7 +13,7 @@ VENDOR_DIR = Path(__file__).resolve().parent.parent / '.vendor'
 if VENDOR_DIR.exists() and str(VENDOR_DIR) not in sys.path: sys.path.insert(0, str(VENDOR_DIR))
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
-from .seed import make_seed, PROTOCOL
+from .seed import make_seed, PROTOCOL, SEED_CAPAS
 
 MONGO_URI = "mongodb://localhost:27017"
 DB_NAME   = "arcguard"
@@ -76,12 +76,19 @@ class Store:
                 {"key": "batch",    "value": json.dumps(batch)},
                 {"key": "protocol", "value": json.dumps(PROTOCOL)},
             ])
+            for capa in SEED_CAPAS:
+                self._capas.update_one(
+                    {"id": capa["id"]},
+                    {"$set": {"id": capa["id"], "value": json.dumps(capa)}},
+                    upsert=True,
+                )
             self._audit.insert_one({
                 "seq":       self._next_seq(),
                 "timestamp": datetime.now(timezone.utc).isoformat(),
                 "actor":     "System",
                 "action":    "seed_created",
-                "payload":   json.dumps({"synthetic": True, "sites": 204, "visits": 5304}),
+                "payload":   json.dumps({"synthetic": True, "sites": 204, "visits": 5304,
+                                         "capas": len(SEED_CAPAS)}),
             })
         # Local mode intentionally has one account only. There is no public registration route.
         self._users.update_one(
