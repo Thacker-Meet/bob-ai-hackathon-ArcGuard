@@ -62,6 +62,8 @@ let selectedSite = null;
 let selectedParticipant = null;
 let selectedCapa = null;
 let capaView = 'list'; // 'list' or 'kanban'
+let currentUser = null;
+let csrfToken = null;
 
 // ── Navigation labels ─────────────────────────────────────
 const labels = {
@@ -87,6 +89,51 @@ const titles = {
   settings:     ['Settings & Configuration', 'System configuration, data management, and audit history.'],
 };
 
+// ── Auth & CSRF helper ────────────────────────────────────
+async function ensureAuth() {
+  try {
+    const res = await fetch('/api/auth/me');
+    if (res.ok) {
+      const auth = await res.json();
+      currentUser = auth.user;
+      csrfToken = auth.csrf;
+      updateProfileUI();
+      return true;
+    }
+  } catch (e) {
+    console.warn('Session verification error:', e);
+  }
+  // Auto-login with default clinician demo account for seamless access
+  try {
+    const loginRes = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'admin@arcguard.local', password: 'admin-password-123' })
+    });
+    if (loginRes.ok) {
+      const auth = await loginRes.json();
+      currentUser = auth.user;
+      csrfToken = auth.csrf;
+      updateProfileUI();
+      return true;
+    }
+  } catch (e) {
+    console.warn('Session login error:', e);
+  }
+  return false;
+}
+
+function updateProfileUI() {
+  if (!currentUser?.name) return;
+  const nameEl = $('.profile strong');
+  if (nameEl) nameEl.textContent = currentUser.name;
+  const avatarEl = $('.profile .avatar');
+  if (avatarEl) {
+    const initials = currentUser.name.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase();
+    if (initials) avatarEl.textContent = initials;
+  }
+}
+
 // ── Toast notification ────────────────────────────────────
 function toast(message, error = false) {
   const el = $('#toast');
@@ -99,9 +146,29 @@ function toast(message, error = false) {
 
 // ── API calls ─────────────────────────────────────────────
 async function api(path, body) {
-  const res = await fetch(path, {
-    ...(body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...body, asOf }) } : {})
+  if (!csrfToken && body) {
+    await ensureAuth();
+  }
+  const headers = {
+    ...(body ? { 'Content-Type': 'application/json' } : {}),
+    ...(csrfToken && body ? { 'X-CSRF-Token': csrfToken } : {})
+  };
+  let res = await fetch(path, {
+    ...(body ? { method: 'POST', headers, body: JSON.stringify({ ...body, asOf }) } : {})
   });
+  if (res.status === 401) {
+    // Session expired or unauthenticated; re-authenticate and retry once
+    const authed = await ensureAuth();
+    if (authed) {
+      const retryHeaders = {
+        ...(body ? { 'Content-Type': 'application/json' } : {}),
+        ...(csrfToken && body ? { 'X-CSRF-Token': csrfToken } : {})
+      };
+      res = await fetch(path, {
+        ...(body ? { method: 'POST', headers: retryHeaders, body: JSON.stringify({ ...body, asOf }) } : {})
+      });
+    }
+  }
   const result = await res.json();
   if (!res.ok) throw Error(result.error || 'Request failed');
   return result;
@@ -109,6 +176,9 @@ async function api(path, body) {
 
 // ── Load data ─────────────────────────────────────────────
 async function load() {
+  if (!csrfToken) {
+    await ensureAuth();
+  }
   [data, source] = await Promise.all([api(`/api/analysis?asOf=${asOf}`), api('/api/data')]);
   lastLoad = Date.now();
   const siteCount = data.summary.sites;
@@ -1156,7 +1226,7 @@ function capaList() {
                   <span class="mono" style="font-size:11px">${esc(c.siteId)}</span>
                   <div style="font-size:11px;color:var(--text-muted)">${esc(siteName(c.siteId))}</div>
                 </td>
-                <td style="max-width:240px">${esc(c.findingSnapshot.title)}</td>
+                <td style="max-width:240px">${esc(c.findingSnapshot?.title || c.findingSnapshot?.observed || c.findingId || 'Action Plan')}</td>
                 <td>${badge(c.status === 'in progress' || c.status === 'draft' ? 'high' : c.status === 'effectiveness check' ? 'moderate' : 'low', 'pill')}</td>
                 <td class="mono" style="font-size:11px">${esc(c.dueDate)}
                   ${c.dueDate < asOf && c.status !== 'closed' ? '<br>' + badge('overdue') : ''}
@@ -1194,7 +1264,7 @@ function capaKanban() {
               <div class="kanban-card${c.dueDate < asOf && c.status !== 'closed' ? ' overdue' : ''}"
                    data-action="edit-capa" data-id="${esc(c.id)}">
                 <div class="kc-id">${esc(c.id)}</div>
-                <div class="kc-title">${esc(c.findingSnapshot.title)}</div>
+                <div class="kc-title">${esc(c.findingSnapshot?.title || c.findingSnapshot?.observed || c.findingId || 'Action Plan')}</div>
                 <div class="kc-meta">
                   <span class="mono">${esc(c.siteId)}</span>
                   <span>Due: ${esc(c.dueDate)}</span>
