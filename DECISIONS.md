@@ -2,7 +2,7 @@
 
 - **Plan first.** The user required a feature plan before code. `docs/PLAN.md` was the first application artifact.
 - **Python standard library and plain JavaScript.** The workspace was empty. This stack runs today without package installation, external services or CDN access.
-- **SQLite transactions.** Related state and audit writes commit together. Failed validation does not partially replace a study.
+- **MongoDB persistence.** Study state, reviews, CAPAs, users, sessions, and audit events are stored in local MongoDB. Failed validation does not partially replace a study.
 - **Pure rule engine.** Detection and risk scoring can be tested without HTTP or browser state.
 - **Decimal dose comparisons.** Inclusive fractional tolerances must not generate false findings from binary floating-point rounding.
 - **Explicit synthetic protocol.** No actual protocol was supplied. Example rules are visible and editable; none are presented as clinical facts.
@@ -18,4 +18,5 @@
 - **Draft CAPA recommendations.** Root cause remains an investigation, not an invented diagnosis. Closure requires evidence and a confirmed finding.
 - **JSON, CSV and browser print.** These formats work without extra packages. JSON carries complete source evidence and CAPA plans.
 - **Loopback-only runtime.** This is a tested reference implementation, not a claim of regulated production readiness. The README names remaining deployment controls.
+- **Single administrator login.** Registration is excluded. Local startup creates one administrator account and removes other local accounts so the access model stays explicit.
 - **Reference slides.** The attached documentation slides were treated as supporting material. FLOW.md and this decision log help explain execution and reasoning; the user's explicit requirements control scope.

@@ -6,12 +6,11 @@ Written before the database/authentication update.
 
 | Feature | What it does | Input | Output | Where used | By whom |
 |---|---|---|---|---|---|
-| MongoDB storage | Replaces live SQLite use with local MongoDB; preserves the existing SQLite data through a one-time migration | MONGODB_URI, database name, existing SQLite file | Persistent study, audit history, accounts and sessions | All APIs; migration command | Administrator |
-| Registration | Creates a local account using a name, email and password | Name, normalized email, password | Account with a salted password hash | Register screen; POST /api/auth/register | New team member |
-| Login and logout | Verifies credentials and starts or revokes a session | Email/password; secure random session cookie | Expiring server-side session; signed-in profile | Login screen; auth APIs; header | All users |
-| Protected workspace | Requires login for study reads, downloads and writes; derives audit identity from the account | Session cookie and CSRF token | Authorized response or 401/403 | All study APIs | Registered team members |
+| MongoDB storage | Stores study data, audit history, accounts, and sessions in local MongoDB | MongoDB URI and database name | Persistent MongoDB collections | All APIs and local server startup | Administrator |
+| Administrator login and logout | Verifies the single local administrator credential and starts or revokes a session | Administrator email/password; secure random session cookie | Expiring server-side session; signed-in administrator profile | Login screen; auth APIs; header | ArcGuard Administrator |
+| Protected workspace | Requires administrator login for study reads, downloads and writes; derives audit identity from the account | Session cookie and CSRF token | Authorized response or 401/403 | All study APIs | ArcGuard Administrator |
 
-Assumptions: this remains a local, single shared study. Registration is open on loopback and all registered accounts have the same study access; persona-specific permissions are not implied. Password recovery and email verification are not part of this request. Passwords use salted scrypt hashes. Sessions use HttpOnly, SameSite cookies, an absolute expiry and CSRF checks. Existing SQLite files remain unchanged as backups. MongoDB must run locally; there is no silent SQLite fallback.
+Assumptions: this remains a local, single shared study. Only the seeded administrator account can sign in; registration, password recovery, email verification, and persona-specific permissions are outside this increment. Passwords use salted scrypt hashes. Sessions use HttpOnly, SameSite cookies, an absolute expiry and CSRF checks. MongoDB must run locally; there is no silent SQLite fallback.
 
 Written before application code. Product name: ArcGuardAI.
 
@@ -26,7 +25,7 @@ Written before application code. Product name: ArcGuardAI.
 | Participant review | Shows source visit records and rule evidence. Records reviewer decisions with reasons. | Finding ID; reviewer, decision, reason | Persisted review state and audit event | Deviations detail; POST /api/reviews | CRA, QA |
 | CAPA management | Creates a draft action plan from a finding and tracks owner, root cause, actions and effectiveness. | Finding ID, owner, dueDate, rootCause, correctiveAction, preventiveAction, effectiveness, status | Persisted CAPA record; guarded closure | CAPA; POST /api/capas | QA, Site Coordinator |
 | Reports and exports | Produces CAPA-ready review packages and flat finding exports. | Current analysis, rules, reviews, CAPAs, evaluation date | JSON package, CSV findings, printable HTML through browser | Reports; GET /api/report; GET /api/export.csv | Risk Manager, QA |
-| Audit and configuration | Shows local operating limits, score policy and persisted change history. | Intake, protocol change, review and CAPA changes | SQLite audit events with timestamp, actor and payload | Settings; GET /api/audit | QA, administrator |
+| Audit and configuration | Shows local operating limits, score policy and persisted change history. | Intake, protocol change, review and CAPA changes | MongoDB audit events with timestamp, actor and payload | Settings; GET /api/audit | QA, administrator |
 | Responsive application shell | Connects all eight reference views with accessible navigation, filters and error states. | API responses; search, site and severity filters | Responsive HTML interface | All screens | All personas |
 
 ## Assumptions and clinical boundaries
@@ -55,11 +54,11 @@ Written before application code. Product name: ArcGuardAI.
 
 ## Architecture and data flow
 
-- Python 3.12 standard library HTTP server + SQLite persistence. No package install or external services needed.
+- Python 3.12 standard library HTTP server + local MongoDB persistence. No build step or external application service is needed.
 - Plain JavaScript modules, local CSS and HTML for the frontend. No build step.
 - `backend/seed.py` creates deterministic data and the explicit example protocol.
 - `backend/engine.py` validates records/rules, detects findings and calculates scores as pure functions.
-- `backend/store.py` owns SQLite transactions and audit events.
+- `backend/store.py` owns MongoDB collections and audit events.
 - `backend/server.py` validates API requests and serves static files on loopback.
 - `frontend/app.js` renders navigation, views and workflow forms; `frontend/styles.css` reproduces Stitch's visual language.
 - `tests/` exercises boundaries, unknowns, severity, score normalization and API workflows.

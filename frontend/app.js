@@ -56,7 +56,7 @@ const tip = (label, explanation) =>
   `<span class="help-tip" tabindex="0">${esc(label)}<span class="ht-icon" title="${esc(explanation)}">?</span><span class="ht-bubble">${esc(explanation)}</span></span>`;
 
 // ── App state ─────────────────────────────────────────────────
-let data, source, asOf = '2026-09-15', page = 'overview';
+let data, source, auth = null, asOf = '2026-09-15', page = 'overview';
 let filter = { q: '', severity: 'all', site: 'all' }, offset = 0;
 let welcomeDismissed = false;
 
@@ -105,8 +105,12 @@ function toast(message, error = false) {
 
 // ── API calls ─────────────────────────────────────────────────
 async function api(path, body) {
+  const headers = { ...(body ? { 'Content-Type': 'application/json' } : {}) };
+  if (auth?.csrf) headers['X-CSRF-Token'] = auth.csrf;
   const res = await fetch(path, {
-    ...(body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...body, asOf }) } : {})
+    credentials: 'same-origin',
+    headers,
+    ...(body ? { method: 'POST', body: JSON.stringify({ ...body, asOf }) } : {})
   });
   const result = await res.json();
   if (!res.ok) throw Error(result.error || 'Request failed');
@@ -115,9 +119,35 @@ async function api(path, body) {
 
 // ── Load data ─────────────────────────────────────────────────
 async function load() {
+  try {
+    auth = await api('/api/auth/me');
+  } catch (error) {
+    auth = null;
+    render();
+    return;
+  }
   [data, source] = await Promise.all([api(`/api/analysis?asOf=${asOf}`), api('/api/data')]);
   $('#site-count').textContent = `${data.summary.sites} Sites`;
   render();
+}
+
+function authScreen(error = '') {
+  $('#main').innerHTML = `
+    <section class="auth-shell" aria-labelledby="login-title">
+      <div class="auth-card">
+        <img src="/assets/arcguard-logo.png" alt="ArcGuard" class="auth-logo">
+        <p class="eyebrow">Clinical trial risk monitor</p>
+        <h1 id="login-title">Sign in to ArcGuard</h1>
+        <p class="subtitle">Use your authorised reviewer account to view study data and manage findings.</p>
+        ${error ? `<div class="inline-error" role="alert">${esc(error)}</div>` : ''}
+        <form id="login-form" class="auth-form">
+          <label>Email<input name="email" type="email" autocomplete="username" required autofocus placeholder="you@example.com"></label>
+          <label>Password<input name="password" type="password" autocomplete="current-password" required placeholder="Enter your password"></label>
+          <button class="primary" type="submit">Sign in</button>
+        </form>
+        <p class="auth-note">Administrator access only. Use the credentials supplied with your local deployment.</p>
+      </div>
+    </section>`;
 }
 
 // ── Navigation ─────────────────────────────────────────────────
@@ -132,7 +162,7 @@ function nav() {
          ${id === 'deviations' ? `<span class="count">${data.findings.length}</span>` : ''}
          ${id === 'capa' && openCapas > 0 ? `<span class="count">${openCapas}</span>` : ''}
        </a>`
-    ).join('');
+    ).join('') + `<button class="nav-logout" data-action="logout" type="button">Sign out</button>`;
 }
 
 // ── Page header ──────────────────────────────────────────────
@@ -663,10 +693,6 @@ function rules() {
               </label>
             `).join('')}
             
-            <label class="full" style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
-              Your name (reviewer)
-              <input name="actor" required placeholder="Enter your full name" maxlength="100">
-            </label>
           </div>
           <div class="form-actions">
             <button class="primary" type="submit">Save New Rules Version</button>
@@ -706,10 +732,6 @@ function settings() {
               <input name="file" type="file" accept=".json,application/json" required style="display:block;margin-top:6px;background:white">
             </label>
             <label class="full">
-              Your name (data manager)
-              <input name="actor" required maxlength="100" placeholder="Enter your full name" style="display:block;margin-top:6px">
-            </label>
-            <label class="full">
               <span style="display:flex;align-items:center;gap:8px;font-weight:400;margin-top:10px">
                 <input type="checkbox" required style="width:auto;margin:0">
                 I confirm I want to replace the entire current dataset with this file.
@@ -747,9 +769,14 @@ function settings() {
 
 // ── Render ────────────────────────────────────────────────────
 function render() {
+  if (!auth) { authScreen(); return; }
   page = location.hash.slice(1) || 'overview';
   if (!labels[page]) page = 'overview';
   nav();
+  const profile = $('.profile');
+  if (profile) {
+    profile.innerHTML = `<span><strong>${esc(auth.user.name)}</strong><small>${esc(auth.user.email)}</small></span><span class="avatar" aria-hidden="true">${esc(auth.user.name.split(/\s+/).map(p => p[0]).join('').slice(0, 2).toUpperCase())}</span><button class="sign-out" data-action="logout" type="button">Sign out</button>`;
+  }
   const pages = { overview, sites, deviations, capa: capas, reports, rules, settings };
   $('#main').innerHTML = pages[page]();
   if (page === 'settings') {
@@ -853,10 +880,6 @@ function findingDialog(id) {
     <form id="review-form" data-id="${esc(f.id)}">
       <div class="form-grid">
         <label>
-          Your name (reviewer)
-          <input name="actor" value="${esc(f.review?.actor || '')}" maxlength="100" required placeholder="Enter your full name">
-        </label>
-        <label>
           Decision
           <select name="decision">
             <option value="under review" ${f.status === 'under review' ? 'selected' : ''}>👀 Needs Review</option>
@@ -904,10 +927,6 @@ function capaDialog(findingId, capa) {
           <input name="dueDate" type="date" value="${esc(capa?.dueDate || '')}" required>
         </label>
         <label>
-          Your name (reviewer completing this form)
-          <input name="actor" value="${esc(capa?.actor || '')}" required maxlength="100" placeholder="Your full name">
-        </label>
-        <label>
           Current Status
           <select name="status">
             <option value="draft" ${(!capa || capa.status === 'draft') ? 'selected' : ''}>📝 Draft – just started</option>
@@ -945,6 +964,12 @@ document.addEventListener('click', async e => {
         el.disabled = true;
         await load();
         toast('Data refreshed successfully.');
+        break;
+      case 'logout':
+        await api('/api/auth/logout', {});
+        auth = null; data = null; source = null;
+        render();
+        toast('You have been signed out.');
         break;
       case 'close':         $('#dialog').close(); break;
       case 'site':          siteDialog(id); break;
@@ -1016,7 +1041,11 @@ document.addEventListener('submit', async e => {
   if (error) error.textContent = '';
   if (button) button.disabled = true;
   try {
-    if (form.id === 'review-form') {
+    if (form.id === 'login-form') {
+      auth = await api('/api/auth/login', { email: values.email, password: values.password });
+      await load();
+      toast('Signed in successfully.');
+    } else if (form.id === 'review-form') {
       await api('/api/reviews', { ...values, findingId: form.dataset.id });
       $('#dialog').close(); await load();
       toast('Review decision saved successfully.');

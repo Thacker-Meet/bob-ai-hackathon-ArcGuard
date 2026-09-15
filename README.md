@@ -1,121 +1,53 @@
-# 🚀 [Your Project Title Here]
+# ArcGuard Clinical Trial Risk Monitor
 
-> ⚠️ **Replace everything in `[ ]` brackets with your actual content before submission.**
+ArcGuard compares synthetic patient visits with study rules, highlights protocol deviations, scores research-site risk, and prepares review and CAPA reports. This repository runs locally with MongoDB and requires sign-in before study data is shown.
 
----
+## Run locally
 
-## 👥 Team
+1. Install Python 3.11+ and start MongoDB on `mongodb://localhost:27017`.
+2. From this repository, install the dependency:
 
-| Field | Value |
-|---|---|
-| **Team Name** | [Your Team Name] |
-| **Track** | [AI / DevOps / Sustainability / Open] |
-| **Team Lead** | [Name] — [email@ibm.com] |
-| **Members** | [Name 1], [Name 2], [Name 3] |
+   ```powershell
+   python -m pip install pymongo
+   ```
 
----
+3. Start the server:
 
-## 🎯 Problem Statement
+   ```powershell
+   python -m backend.server --port 8000
+   ```
 
-> In 2–3 sentences: What problem does your project solve? Who experiences this problem?
+4. Open <http://127.0.0.1:8000/>.
 
-[Describe the real-world problem your project addresses. Be specific about who the user is and what pain point they face.]
+The app creates the `arcguard` database, sample study data, and a local demo account on first start.
 
----
+## Administrator login
 
-## 💡 Solution
+- Email: `admin@arcguard.local`
+- Password: `admin-password-123`
 
-> In 2–3 sentences: What did you build? How does it solve the problem above?
+There is no registration screen or public registration API. Local mode creates this single administrator account automatically.
 
-[Describe your solution clearly. Explain the core mechanism — what makes it work.]
+## Main features
 
----
+- Protocol rule checks for missed visits, visit windows, dose errors, banned medicines, and documentation gaps.
+- Major, minor, and administrative deviation classification.
+- Leading-indicator site risk scoring.
+- Review decisions, CAPA tracking, audit history, and CSV/JSON reports.
+- MongoDB persistence for study state, reviews, CAPAs, users, and sessions.
 
-## ✨ Key Features
+## Test
 
-- **Feature 1:** [Brief description — e.g., "Real-time anomaly detection using watsonx.ai"]
-- **Feature 2:** [Brief description]
-- **Feature 3:** [Brief description]
-- **Feature 4:** [Optional]
-- **Feature 5:** [Optional]
-
----
-
-## 🛠️ Tech Stack
-
-| Category | Technologies |
-|---|---|
-| **Languages** | [e.g., Python, TypeScript] |
-| **Frameworks** | [e.g., FastAPI, React] |
-| **IBM Technologies** | [e.g., watsonx.ai, IBM Bob, IBM Cloud] |
-| **Databases** | [e.g., PostgreSQL, Redis] |
-| **Other** | [e.g., Docker, GitHub Actions] |
-
----
-
-## 📁 Repository Structure
-
-```
-├── src/                  # All source code
-├── docs/                 # Written documentation
-│   ├── problem-statement.md
-│   ├── solution-overview.md
-│   ├── architecture.md
-│   └── setup-guide.md
-├── demo/                 # Demo artifacts
-│   ├── screenshots/      # App screenshots
-│   └── demo-video-link.txt  # Link to demo video
-├── presentation/         # Slide deck
-└── submission.yaml       # Structured submission metadata
+```powershell
+python -m unittest discover -s tests -v
 ```
 
----
+The API tests use an isolated MongoDB database, sign in with the demo account, and exercise protected reads and writes. A local MongoDB instance is required.
 
-## ⚡ How to Run
+## Documentation
 
-> **Copy these exact steps from your [`docs/setup-guide.md`](docs/setup-guide.md)**
+Feature documents are indexed in [docs/README.md](docs/README.md). Login details are in [docs/login.md](docs/login.md).
 
-```bash
-# 1. Clone the repo
-git clone https://github.com/[your-repo].git
-cd [your-repo]
+## Security limits
 
-# 2. Install dependencies
-[your install command here]
-
-# 3. Configure environment
-cp .env.example .env
-# Edit .env with your values
-
-# 4. Run the project
-[your run command here]
-```
-
----
-
-## 🖥️ Demo
-
-| Artifact | Link |
-|---|---|
-| 📹 Demo Video | [See demo/demo-video-link.txt](demo/demo-video-link.txt) |
-| 🌐 Live Demo | [See demo/live-demo-url.txt](demo/live-demo-url.txt) |
-| 🖼️ Screenshots | [See demo/screenshots/](demo/screenshots/) |
-| 📊 Presentation | [See presentation/slides.pdf](presentation/) |
-
----
-
-## ⚠️ Known Limitations
-
-> Be honest — judges appreciate transparency over overclaiming.
-
-- [Limitation 1: e.g., "Authentication is mocked — not production-ready"]
-- [Limitation 2: e.g., "Only tested on Chrome"]
-- [Limitation 3: e.g., "Feature X is scaffolded but not fully implemented"]
-
----
-
-## 🏅 What We're Most Proud Of
-
-[Tell the judges what part of your submission is strongest and worth paying close attention to.]
-
----
+This is a local synthetic-data application. The session uses an HttpOnly, SameSite cookie and CSRF token, but production use still needs HTTPS, secret management, account lifecycle controls, rate limiting, and a validated identity provider.

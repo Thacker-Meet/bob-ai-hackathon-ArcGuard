@@ -2,12 +2,12 @@
 
 ## What it does
 - Records intake, protocol, review and CAPA mutations in the same transaction as the change.
-- Closes database connections after every request, including failed transactions.
+- Stores the change and audit event in local MongoDB.
 - Shows the evaluation date, operating limits and recent change history.
 ## Input
-- Actor name, action and change payload.
+- Authenticated administrator identity, action and change payload.
 ## Output
-- SQLite audit records with sequential IDs and UTC timestamps.
+- MongoDB audit records with sequential IDs and UTC timestamps.
 ## Where used
 - Settings. GET `/api/audit`.
 ## By whom
@@ -15,5 +15,5 @@
 ## How to test
 - Save a review and inspect the newest audit entry. Restart the server and check it remains.
 ## Known limits
-- Local SQLite is not tamper-resistant. Names are self-entered.
+- Local MongoDB is not tamper-resistant. This is not a regulated audit trail.
 - Loopback only. Cross-origin browser writes are blocked. This does not replace production identity, authorization, encryption, retention controls or validation.

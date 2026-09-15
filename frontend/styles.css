@@ -71,6 +71,8 @@ nav a {
 }
 nav a:hover { background: #f1f5fb; color: var(--text); }
 nav a.active { background: var(--teal-light); color: var(--teal); font-weight: 700; }
+.nav-logout { width: calc(100% - 16px); margin: 18px 8px 0; padding: 9px 12px; border: 1px solid var(--border); border-radius: 7px; background: var(--surface); color: var(--muted); text-align: left; cursor: pointer; font-size: 12px; }
+.nav-logout:hover { color: var(--text); border-color: var(--teal); }
 svg.icon { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
 .count {
   margin-left: auto; background: #ffe4e8; color: #b91c1c;
@@ -104,11 +106,26 @@ svg.icon { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-w
 .profile { display: flex; align-items: center; gap: 10px; }
 .profile span strong { display: block; font-size: 13px; }
 .profile span small { color: var(--muted); font-size: 11px; margin-top: 1px; display: block; }
+.sign-out { border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 6px; padding: 6px 9px; font-size: 11px; cursor: pointer; }
+.sign-out:hover { color: var(--text); border-color: var(--teal); }
 .avatar {
   width: 34px; height: 34px; border-radius: 50%; background: var(--teal);
   color: white; font-weight: 700; font-size: 12px;
   display: grid; place-items: center; border: 2px solid var(--teal-mid);
 }
+
+/* ── Login ── */
+.auth-shell { min-height: calc(100vh - 110px); display: grid; place-items: center; padding: 32px 16px; }
+.auth-card { width: min(440px, 100%); background: var(--surface); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow-md); padding: 34px; }
+.auth-logo { width: 190px; height: auto; margin-bottom: 22px; }
+.auth-card .eyebrow { color: var(--teal); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 7px; }
+.auth-card h1 { font-size: 25px; margin-bottom: 7px; }
+.auth-form { display: grid; gap: 16px; margin-top: 24px; }
+.auth-form label { display: grid; gap: 6px; font-size: 13px; font-weight: 600; }
+.auth-form input { width: 100%; border: 1px solid var(--border); border-radius: 7px; padding: 10px 12px; color: var(--text); background: #fff; }
+.auth-form button { width: 100%; justify-content: center; margin-top: 3px; }
+.auth-note { margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border); color: var(--muted); font-size: 11px; line-height: 1.6; }
+.auth-card .inline-error { margin-top: 16px; }
 
 /* ── Main ── */
 main { padding: 20px 26px 30px; min-height: calc(100vh - 56px - 44px); }
@@ -438,4 +455,6 @@ dialog .section-head { margin-bottom: 16px; }
   .form-grid .full { grid-column: auto; }
   .toolbar { flex-direction: column; align-items: stretch; }
   dialog { padding: 16px; width: calc(100% - 16px); }
+  .auth-card { padding: 24px 20px; }
+  .auth-shell { min-height: calc(100vh - 80px); }
 }

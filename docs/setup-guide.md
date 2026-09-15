@@ -1,79 +1,49 @@
-# Setup Guide
+# Setup guide
 
-> **This file is read by the automated evaluation pipeline. Be precise and complete.**
+## What it does
 
-## Prerequisites
+- Explains how to run ArcGuard locally with MongoDB.
+- Provides the single administrator login used by local mode.
 
-Before you begin, ensure you have the following installed:
+## Input
 
-- [ ] [e.g., Python 3.11+]
-- [ ] [e.g., Node.js 18+]
-- [ ] [e.g., Docker Desktop]
-- [ ] [e.g., An IBM Cloud account with watsonx.ai access]
+- Python 3.11 or newer.
+- A local MongoDB server at `mongodb://localhost:27017`.
+- The repository files and bundled `.vendor` dependency folder.
 
-## Environment Variables
+## Output
 
-Copy `.env.example` to `.env` and fill in the values:
+- ArcGuard at `http://127.0.0.1:8000/`.
+- A seeded `arcguard` MongoDB database with sample study data and one administrator account.
 
-```bash
-cp .env.example .env
+## Where used
+
+- Local development, review, and test setup.
+
+## By whom
+
+- Developers, QA reviewers, and evaluators.
+
+## How to test
+
+```powershell
+cd D:\IBM-HACKATHON\bob-ai-hackathon-ArcGuard
+python -m backend.server --port 8000
 ```
 
-| Variable | Description | Required |
-|---|---|---|
-| `WATSONX_API_KEY` | Your IBM watsonx.ai API key | Yes |
-| `WATSONX_PROJECT_ID` | Your watsonx.ai project ID | Yes |
-| `DATABASE_URL` | PostgreSQL connection string | Yes |
-| `SLACK_WEBHOOK_URL` | Slack webhook for alerts | No |
+Open the URL and sign in with:
 
-## Installation
+- Email: `admin@arcguard.local`
+- Password: `admin-password-123`
 
-```bash
-# 1. Clone the repository
-git clone https://github.com/[your-org]/[your-repo].git
-cd [your-repo]
+Run the automated checks in another terminal:
 
-# 2. Install backend dependencies
-[your command — e.g.: pip install -r requirements.txt]
-
-# 3. Install frontend dependencies (if applicable)
-[your command — e.g.: cd frontend && npm install]
-
-# 4. Set up the database (if applicable)
-[your command — e.g.: python manage.py migrate]
+```powershell
+python -m unittest discover -s tests -v
 ```
 
-## Running the Application
+## Known limits
 
-```bash
-# Start the backend
-[your command — e.g.: uvicorn app.main:app --reload]
-
-# Start the frontend (in a separate terminal, if applicable)
-[your command — e.g.: cd frontend && npm run dev]
-```
-
-The application will be available at: `http://localhost:[PORT]`
-
-## Running Tests
-
-```bash
-[your test command — e.g.: pytest tests/ -v]
-```
-
-## Quick Demo (Optional)
-
-If you have a demo script or sample data to showcase the project quickly:
-
-```bash
-[e.g.: python demo/seed_demo_data.py]
-[e.g.: open http://localhost:8000/demo]
-```
-
-## Troubleshooting
-
-| Issue | Solution |
-|---|---|
-| [e.g., `ModuleNotFoundError`] | [e.g., Run `pip install -r requirements.txt` again] |
-| [e.g., Database connection refused] | [e.g., Ensure PostgreSQL is running: `docker compose up db`] |
-| [e.g., watsonx.ai 401 error] | [e.g., Check `WATSONX_API_KEY` in your `.env` file] |
+- MongoDB must be running locally.
+- There is no registration, password reset, or second account.
+- The seeded study data is synthetic and must not be used for clinical decisions.

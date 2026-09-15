@@ -66,7 +66,7 @@ The date is 2026-09-15 and the protocol is DEMO-ARC-01 v1.0.
 
 ## Issues found and fixed
 
-- SQLite connections remained open after transactions. Explicit connection cleanup fixed Windows database-lock cleanup failures.
+- MongoDB connections are pooled by the driver and are not closed per request. The store uses short request-scoped operations.
 - A leading-driver label initially included observed burden. It now lists only leading signals.
 - A filter label included an adjacent button. The label now closes correctly.
 - Finding identity needed site, participant and dates. These are now part of the fingerprint.
@@ -77,4 +77,4 @@ The date is 2026-09-15 and the protocol is DEMO-ARC-01 v1.0.
 - No formal clinical validation, security penetration test, screen-reader certification or regulated-system qualification was performed.
 - No actual PDF was saved or visually validated; browser print is provided as an output option.
 - No real EDC feed or IBM Bob integration was tested.
-- Browser workflow test data was preserved in `data/browser-acceptance.sqlite3`. The default working database was refreshed to the original synthetic dataset afterward.
+- Browser workflow tests use the local seeded MongoDB database. The application keeps the synthetic dataset as the default starting state.

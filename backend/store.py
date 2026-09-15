@@ -1,29 +1,73 @@
 """MongoDB persistence. Every mutation and its audit event share one logical operation."""
 import json
+import base64
+import hashlib
+import hmac
+import secrets
+import sys
+from datetime import timedelta
 from contextlib import contextmanager
 from datetime import datetime, timezone
+from pathlib import Path
+VENDOR_DIR = Path(__file__).resolve().parent.parent / '.vendor'
+if VENDOR_DIR.exists() and str(VENDOR_DIR) not in sys.path: sys.path.insert(0, str(VENDOR_DIR))
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 from .seed import make_seed, PROTOCOL
 
 MONGO_URI = "mongodb://localhost:27017"
 DB_NAME   = "arcguard"
+ADMIN_EMAIL = "admin@arcguard.local"
+ADMIN_PASSWORD = "admin-password-123"
 
 
 class Store:
     def __init__(self, uri=MONGO_URI, db_name=DB_NAME):
-        self._client = MongoClient(uri, serverSelectionTimeoutMS=5000)
+        self._client = MongoClient(uri, serverSelectionTimeoutMS=5000, tz_aware=True)
         db = self._client[db_name]
         self._state   = db["state"]
         self._reviews = db["reviews"]
         self._capas   = db["capas"]
         self._audit   = db["audit"]
+        self._users   = db["users"]
+        self._sessions = db["sessions"]
+
+        # Normalize state documents written by the earlier MongoDB adapter.
+        for document in self._state.find({"key": {"$exists": False}}):
+            legacy_key = document.get("_id")
+            if not isinstance(legacy_key, str) or not legacy_key:
+                continue
+            value = document.get("value")
+            self._state.update_one(
+                {"_id": document["_id"]},
+                {"$set": {
+                    "key": legacy_key,
+                    "value": value if isinstance(value, str) else json.dumps(value),
+                }},
+            )
+        for document in self._capas.find({"value": {"$exists": False}}):
+            value = {key: item for key, item in document.items() if key != "_id"}
+            self._capas.update_one(
+                {"_id": document["_id"]},
+                {"$set": {"value": json.dumps(value)}},
+            )
+        for document in self._audit.find({"seq": {"$exists": False}}):
+            payload = document.get("payload", {})
+            self._audit.update_one(
+                {"_id": document["_id"]},
+                {"$set": {
+                    "seq": document.get("id"),
+                    "payload": payload if isinstance(payload, str) else json.dumps(payload),
+                }},
+            )
 
         # Create indexes (idempotent)
         self._state.create_index("key",   unique=True)
         self._reviews.create_index("id",  unique=True)
         self._capas.create_index("id",    unique=True)
         self._audit.create_index("seq")
+        self._users.create_index("email", unique=True)
+        self._sessions.create_index("expiresAt", expireAfterSeconds=0)
 
         # Seed once if the state collection is empty
         if self._state.count_documents({}) == 0:
@@ -39,6 +83,42 @@ class Store:
                 "action":    "seed_created",
                 "payload":   json.dumps({"synthetic": True, "sites": 204, "visits": 5304}),
             })
+        # Local mode intentionally has one account only. There is no public registration route.
+        self._users.update_one(
+            {'email': ADMIN_EMAIL},
+            {'$set': {'name': 'ArcGuard Administrator', 'email': ADMIN_EMAIL, 'password': self.hash_password(ADMIN_PASSWORD)},
+             '$setOnInsert': {'createdAt': datetime.now(timezone.utc).isoformat()}},
+            upsert=True,
+        )
+        self._users.delete_many({'email': {'$ne': ADMIN_EMAIL}})
+        self._sessions.delete_many({})
+
+    @staticmethod
+    def hash_password(password, salt=None):
+        salt = salt or secrets.token_bytes(16)
+        digest = hashlib.scrypt(password.encode(), salt=salt, n=2**14, r=8, p=1, dklen=32)
+        return {'salt': base64.b64encode(salt).decode(), 'digest': base64.b64encode(digest).decode(), 'algorithm': 'scrypt'}
+
+    @staticmethod
+    def verify_password(password, record):
+        try:
+            encoded = record.get('password', record)
+            salt = base64.b64decode(encoded['salt']); expected = base64.b64decode(encoded['digest'])
+            actual = hashlib.scrypt(password.encode(), salt=salt, n=2**14, r=8, p=1, dklen=32)
+            return hmac.compare_digest(actual, expected)
+        except (KeyError, ValueError, TypeError): return False
+
+    def find_user(self, email): return self._users.find_one({'email': email})
+
+    def create_session(self, user):
+        token, csrf = secrets.token_urlsafe(32), secrets.token_urlsafe(24)
+        expires = datetime.now(timezone.utc) + timedelta(hours=8)
+        self._sessions.insert_one({'_id': token, 'userId': user['_id'], 'csrf': csrf, 'expiresAt': expires})
+        return token, csrf, expires
+
+    def get_session(self, token): return self._sessions.find_one({'_id': token}) if token else None
+    def delete_session(self, token):
+        if token: self._sessions.delete_one({'_id': token})
 
     # ------------------------------------------------------------------
     # Internal helpers

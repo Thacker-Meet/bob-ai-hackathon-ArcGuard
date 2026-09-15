@@ -16,4 +16,4 @@
 ## Known limits
 - Draft report, not a regulatory submission or approved CAPA.
 - CSV contains findings; full CAPAs and source data are in JSON and print view.
-- Audit export includes the latest 500 events. Full local history remains in SQLite.
+- Audit export includes the latest 500 events. Full local history remains in MongoDB.

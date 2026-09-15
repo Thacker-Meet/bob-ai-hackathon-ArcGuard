@@ -1,8 +1,10 @@
 import copy
 import json
-import tempfile
 import threading
 import unittest
+import uuid
+import http.cookiejar
+from urllib.request import build_opener, HTTPCookieProcessor
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 from backend.server import make_server
@@ -10,20 +12,25 @@ from backend.server import make_server
 class ApiTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.tmp=tempfile.TemporaryDirectory()
-        cls.server=make_server(0,cls.tmp.name+'/test.sqlite3')
+        cls.db_name = 'arcguard_test_' + uuid.uuid4().hex
+        cls.server=make_server(0, db_name=cls.db_name)
         cls.thread=threading.Thread(target=cls.server.serve_forever,daemon=True);cls.thread.start()
         cls.base=f'http://127.0.0.1:{cls.server.server_port}'
+        cls.opener=build_opener(HTTPCookieProcessor(http.cookiejar.CookieJar()))
+        status, payload = cls.request('/api/auth/login', {'email': 'admin@arcguard.local', 'password': 'admin-password-123'})
+        assert status == 200, payload
+        cls.csrf = payload['csrf']
 
     @classmethod
     def tearDownClass(cls):
-        cls.server.shutdown();cls.server.server_close();cls.thread.join();cls.tmp.cleanup()
+        cls.server.shutdown();cls.server.server_close();cls.thread.join()
 
-    def request(self,path,body=None,headers=None):
-        req=Request(self.base+path,data=json.dumps(body).encode() if body is not None else None,
-                    headers={'Content-Type':'application/json',**(headers or {})})
+    @classmethod
+    def request(cls,path,body=None,headers=None):
+        merged = {'Content-Type':'application/json', 'X-CSRF-Token': getattr(cls, 'csrf', ''), **(headers or {})}
+        req=Request(cls.base+path,data=json.dumps(body).encode() if body is not None else None, headers=merged)
         try:
-            with urlopen(req) as res:return res.status,json.loads(res.read())
+            with cls.opener.open(req) as res:return res.status,json.loads(res.read())
         except HTTPError as e:return e.code,json.loads(e.read())
 
     def test_invalid_import_atomic(self):
@@ -53,14 +60,25 @@ class ApiTests(unittest.TestCase):
     def test_cross_origin_write_rejected(self):
         self.assertEqual(self.request('/api/import',{'actor':'x'}, {'Origin':'https://evil.example'})[0],403)
 
+    def test_protected_api_requires_login(self):
+        req = Request(self.base + '/api/analysis')
+        with self.assertRaises(HTTPError) as error:
+            urlopen(req)
+        self.assertEqual(error.exception.code, 401)
+
+    def test_only_administrator_can_login(self):
+        status, _ = self.request('/api/auth/login', {'email': 'reviewer@arcguard.local', 'password': 'any-password'})
+        self.assertEqual(status, 400)
+
     def test_protocol_version_reuse_rejected(self):
         p=self.request('/api/protocol')[1]
         self.assertEqual(self.request('/api/protocol',{'actor':'Test','protocol':p})[0],400)
 
     def test_exports_and_static(self):
-        with urlopen(self.base+'/api/export.csv') as res:
+        req = Request(self.base+'/api/export.csv', headers={'X-CSRF-Token': self.csrf})
+        with self.opener.open(req) as res:
             text=res.read().decode();self.assertIn('recommendation',text);self.assertIn('DEV-',text)
-        with urlopen(self.base+'/') as res:
+        with self.opener.open(self.base+'/') as res:
             self.assertIn('ArcGuardAI',res.read().decode());self.assertIn("frame-ancestors 'none'",res.headers['Content-Security-Policy'])
         self.assertEqual(self.request('/api/missing')[0],404)
 

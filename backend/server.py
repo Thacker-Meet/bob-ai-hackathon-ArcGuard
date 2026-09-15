@@ -4,10 +4,15 @@ import csv
 import io
 import json
 import mimetypes
+import sys
 import uuid
+from http.cookies import SimpleCookie
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
+VENDOR_DIR = Path(__file__).resolve().parent.parent / '.vendor'
+if VENDOR_DIR.exists() and str(VENDOR_DIR) not in sys.path: sys.path.insert(0, str(VENDOR_DIR))
 from pymongo.errors import PyMongoError
 from .engine import analyze, day, nonempty, validate_batch, validate_protocol
 from .seed import AS_OF
@@ -19,7 +24,7 @@ def make_server(port=8000, mongo_uri=MONGO_URI, db_name=DB_NAME):
     store = Store(uri=mongo_uri, db_name=db_name)
 
     class Handler(BaseHTTPRequestHandler):
-        def send(self, code, body, content_type='application/json; charset=utf-8', filename=None):
+        def send(self, code, body, content_type='application/json; charset=utf-8', filename=None, headers=None):
             raw = (json.dumps(body, allow_nan=False).encode() if content_type.startswith('application/json') else body.encode() if isinstance(body, str) else body)
             self.send_response(code)
             self.send_header('Content-Type', content_type)
@@ -28,7 +33,22 @@ def make_server(port=8000, mongo_uri=MONGO_URI, db_name=DB_NAME):
             self.send_header('Cache-Control', 'no-store')
             self.send_header('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; object-src 'none'; frame-ancestors 'none'; base-uri 'self'")
             if filename: self.send_header('Content-Disposition', f'attachment; filename="{filename}"')
+            for key, value in (headers or {}).items(): self.send_header(key, value)
             self.end_headers(); self.wfile.write(raw)
+
+        def session_user(self):
+            cookie = SimpleCookie(self.headers.get('Cookie', ''))
+            token = cookie.get('arcguard_session').value if cookie.get('arcguard_session') else None
+            session = store.get_session(token)
+            if not session or session.get('expiresAt') and session['expiresAt'] <= datetime.now(timezone.utc): return None, None, None
+            return store._users.find_one({'_id': session['userId']}), session, token
+
+        def require_user(self, csrf=False):
+            user, session, _ = self.session_user()
+            if not user: self.send(401, {'error': 'Login required'}); return None
+            if csrf and self.headers.get('X-CSRF-Token') != session.get('csrf'):
+                self.send(403, {'error': 'CSRF token missing or invalid'}); return None
+            return user
 
         def analysis(self, as_of):
             state, reviews, capas = store.snapshot()
@@ -42,6 +62,11 @@ def make_server(port=8000, mongo_uri=MONGO_URI, db_name=DB_NAME):
                 query = parse_qs(url.query)
                 as_of = query.get('asOf', [AS_OF])[0]; day(as_of)
                 if url.path == '/api/health': return self.send(200, {'status': 'ok', 'mode': 'synthetic-local'})
+                if url.path == '/api/auth/me':
+                    user, session, _ = self.session_user()
+                    if not user: return self.send(401, {'error': 'Login required'})
+                    return self.send(200, {'user': {'name': user['name'], 'email': user['email']}, 'csrf': session['csrf'], 'expiresAt': session['expiresAt'].isoformat()})
+                if url.path.startswith('/api/') and not self.require_user(): return
                 if url.path == '/api/audit': return self.send(200, store.events())
                 if url.path in ('/api/protocol', '/api/data'):
                     state, _, _ = store.snapshot()
@@ -70,7 +95,7 @@ def make_server(port=8000, mongo_uri=MONGO_URI, db_name=DB_NAME):
 
         def do_POST(self):
             try:
-                # Block cross-origin writes to this unauthenticated loopback demonstration.
+                # Block cross-origin writes to this local authenticated service.
                 origin = self.headers.get('Origin')
                 host = self.headers.get('Host')
                 if host not in (f'127.0.0.1:{self.server.server_port}', f'localhost:{self.server.server_port}'):
@@ -82,9 +107,22 @@ def make_server(port=8000, mongo_uri=MONGO_URI, db_name=DB_NAME):
                 if not 0 < length <= 20_000_000: raise ValueError('JSON body must be between 1 byte and 20 MB')
                 body = json.loads(self.rfile.read(length), parse_constant=lambda s: (_ for _ in ()).throw(ValueError('Non-finite JSON number')))
                 if not isinstance(body, dict): raise ValueError('Body must be a JSON object')
-                actor = body.get('actor'); nonempty(actor, 'actor', 100)
-                as_of = body.get('asOf', AS_OF); day(as_of)
                 endpoint = urlparse(self.path).path
+                if endpoint == '/api/auth/login':
+                    email = str(body.get('email', '')).strip().casefold(); password = body.get('password')
+                    user = store.find_user(email)
+                    if not user or not isinstance(password, str) or not store.verify_password(password, user): raise ValueError('Email or password is incorrect')
+                    token, csrf, expires = store.create_session(user)
+                    return self.send(200, {'user': {'name': user['name'], 'email': user['email']}, 'csrf': csrf, 'expiresAt': expires.isoformat()}, headers={'Set-Cookie': f'arcguard_session={token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800'})
+                if endpoint == '/api/auth/logout':
+                    user = self.require_user(csrf=True)
+                    if not user: return
+                    _, _, token = self.session_user(); store.delete_session(token)
+                    return self.send(200, {'ok': True}, headers={'Set-Cookie': 'arcguard_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0'})
+                user = self.require_user(csrf=True)
+                if not user: return
+                actor = user['name']
+                as_of = body.get('asOf', AS_OF); day(as_of)
                 with store.connect() as db:
                     db.execute('BEGIN IMMEDIATE')
                     state = {r['key']: json.loads(r['value']) for r in db.execute('SELECT * FROM state')}
